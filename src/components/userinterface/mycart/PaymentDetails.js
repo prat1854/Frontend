@@ -1,19 +1,21 @@
 import { Divider,Paper,Grid,TextField,Button } from "@mui/material"
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
-import { useState } from "react";
+import { useState ,useEffect } from "react";
 import StepLabel from '@mui/material/StepLabel';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { useSelector,useDispatch } from 'react-redux';
 import { Navigate, useNavigate } from "react-router-dom";
-import { postData } from "../../../services/FetchNodeAdminServices";
+import { postData, serverURL } from "../../../services/FetchNodeAdminServices";
 import Drawer from '@mui/material/Drawer';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
+import Swal from 'sweetalert2';
+import useRazorpay from "react-razorpay";
 export default function PaymentDetails(){
   const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.up('md'));
-    var [open,setOpen]=useState(false)
+    const [open,setOpen]=useState(false)
     var dispatch=useDispatch()
     var cartData=useSelector((state)=>state.cart)
     var user=useSelector((state)=>state.user)
@@ -21,36 +23,170 @@ export default function PaymentDetails(){
     var data =Object.values(cartData) 
     var keys =Object.keys(cartData) 
     var navigate=useNavigate()
+
     var totalamount=data.reduce((f,s)=>{
-     var ap=0
-         
-      ap=s.price*s.qty
-     return f+ap
-    },0)
-const handleClose=(bool)=>{
-  setOpen(bool)
+      var ap=0
+          
+       ap=s.price*s.qty
+      return f+ap
+     },0)
+
+
+
+/*** states address */
+const [userId,setUserId]=useState('')
+const [pinCode,setPinCode]=useState('')
+const [houseNo,setHouseNo]=useState('')
+const [floorNo,setFloorNo]=useState('')
+const [towerNo,setTowerNo]=useState('')
+const [building,setBuilding]=useState('')
+const [address,setAddress]=useState('')
+const [landmark,setLandmark]=useState('')
+const [city,setCity]=useState('')
+const [state,setState]=useState('')
+const [userAddress,setUserAddress]=useState([])
+const [btnTxt,setBtnTxt]=useState('Place Order')
+  
+/**** */
+const handlePayment = () => {
+  try {
+    const options = {
+      key: "rzp_test_GQ6XaPC6gMPNwH",
+      amount: (totalamount-discount)*100, // Razorpay expects amount in paise (100 paise = 1 INR)
+      currency: "INR",
+      name: "QuickCom",
+      description: "Test Transaction",
+      image: `${serverURL}/images/logo.png`,
+
+      handler: (res) => {
+      //  console.log("Payment successful:", res);
+        
+        dispatch({type:'CLEAR_CART',payload:[]})
+        navigate("/homepage")
+      },
+      prefill: {
+        name: userData[0]?.firstname + " " + userData[0]?.lastname,
+        email: userData[0]?.emailaddress,
+        contact: userData[0]?.mobileno,
+      },
+      notes: {
+        address: "Razorpay Corporate Office",
+      },
+      theme: {
+        color: "#3399cc",
+      },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  } catch (error) {
+   // console.error("Razorpay error:", error);
+    alert("Payment failed to initialize. Please try again.");
+  }
 }
-  const handlePlaceOrder=async()=>{
-   if(userData.length==0) 
-   { 
-   navigate('/login')
+useEffect(function(){
+const script = document.createElement("script");
+script.src = "https://checkout.razorpay.com/v1/checkout.js";
+script.async = true;
+document.body.appendChild(script);
+
+},[])
+
+    const [selectedAddressType, setSelectedAddressType] = useState('');
+
+    const handleAddressTypeSelect = (type) => {
+      setSelectedAddressType(type);
+    };
+
+    const handleClose = () => {
+      setOpen(false); //  Close the Drawer
+    };
+
+
+    const handleSubmitAddress=async()=>{
+      var body={
+        userid: userData[0]?.userid, 
+        pincode: pinCode, 
+        houseno: houseNo, 
+        floorno: floorNo, 
+        towerno: towerNo, 
+        building: building, 
+        address: address, 
+        landmark: landmark, 
+        city: city, 
+        state: state
+      };
+      console.log("PaymentDetails - Submitting address:", body);
+      var response=await postData('userinterface/submit_user_address',body);
+      if(response.status)
+        { 
+          var userDataWithAddress={...userData[0],...body};
+           dispatch({type:"ADD_USER",payload:[userData[0]?.userid,userDataWithAddress]});
+           Swal.fire({
+             
+            icon: "success",
+            text:response.message,
+            showConfirmButton: false,
+            timer: 1500,
+            toast:true
+          });
+          navigate('/cartdisplaypage')
+        }
+        else
+        {
+          Swal.fire({
+             
+            icon: "error",
+            text:response.message,
+            showConfirmButton: false,
+            timer: 1500,
+            toast:true
+          });
+        }
+      setOpen(false)
+    }
+     
+
+
+    const ShowAddress=()=>{
+      return userAddress.map((item)=>{
+        return <div>
+        <div>{userData[0].firstname} {userData[0].lastname} </div>
+        <div>{userData[0].address}</div>
+        <div>{userData[0].building},{userData[0].towerno},{userData[0].floorno}</div>
+        <div>House No:{userData[0].houseno}</div>
+        <div>{userData[0].state},{userData[0].city},{userData[0].pincode}</div>
+      </div>
+    })
+    } 
+
+
+const handlePlaceOrder=async()=>{
+  if(btnTxt==="Make Payment") {
+     handlePayment(); // Call payment handler directly instead of navigating
+  }
+  else {
+   if(userData.length==0) { 
+     navigate('/login');
    }
-   else
-   {
-    var response=await postData('userinterface/check_user_address',{userid:userData[0]?.userid})
-    if(response.status)
-    { //dispatch({type:"ADD_USER",payload:[response.data.userid,response.data]})
-    //navigate('/cartdisplaypage')
-     alert('payment')
-    }
-    else
-    {
-      setOpen(true)
-    }
-
-
+   else {
+     // Check directly if user has address in Redux store before making API call
+     if(userData[0].address) {
+       // User has address, update button and show payment option
+       setBtnTxt("Make Payment");
+     } else {
+       // No address, show address form
+       setOpen(true);
+     }
    }
   }
+}
+
+
+
+
+
+
 
     var discount=data.reduce((f,s)=>{
       var ap=0
@@ -62,6 +198,33 @@ const handleClose=(bool)=>{
       return f+ap
      },0)
  
+     const handleUseCurrentLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            console.log(
+              "Latitude:",
+              position.coords.latitude,
+              "Longitude:",
+              position.coords.longitude
+            );
+            alert(
+              `Location fetched: ${position.coords.latitude}, ${position.coords.longitude}`
+            );
+          },
+          (error) => {
+            console.error("Error fetching location:", error);
+            alert("Unable to fetch location. Please enable location services.");
+          }
+        );
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+    }; 
+
+
+
+
  const addressView=()=>{
   return (
     <div>
@@ -71,15 +234,25 @@ const handleClose=(bool)=>{
            <div style={{marginTop:30,fontFamily:'JioType, helvetica, arial, sans-serif',fontWeight:900,fontSize:18,letterSpacing:0.15,lineHeight: 1}}>
             Add Address
            </div>
-           <div>
-           <img src={'/cross.png'} style={{width:15,height:15,marginTop:30,marginRight:20}}/> 
-           </div>
+           <button style={{
+             border: 'none',
+             borderRadius: '5px',
+             padding: '5px 10px',
+             backgroundColor: '#0078ad',
+             color: '#fff',
+             fontFamily: 'JioType, helvetica, arial, sans-serif',
+             fontWeight: 700,
+             fontSize: '12px',
+             cursor: 'pointer',
+             marginTop: '30px',
+             marginRight: '20px'
+           }} onClick={handleClose}>Close</button>
         </div>
         <div style={{marginTop:30,fontFamily:'JioType, helvetica, arial, sans-serif',fontWeight:900,fontSize:14,letterSpacing:0.15,lineHeight: 1}}>
             Address Details
         </div>
         
-       <div style={{marginTop:15,display:"flex"}}>
+       <div style={{marginTop:15,display:"flex" , cursor:'pointer'}} onClick={handleUseCurrentLocation} > 
         <MyLocationIcon  style={{fontSize:20,color:'#0078ad'}} />
         <div style={{color:'#0078ad',fontWeight: 500,fontSize: 13.5,letterSpacing: 0.25,lineHeight: 1.4285714286}}>
         Use Current Location
@@ -90,31 +263,37 @@ const handleClose=(bool)=>{
        </div>
        <Grid container spacing={1}>
        <Grid item xs={12}  style={{width:'90%',marginTop:5}} >
-       <TextField  label="Pin Code" variant="standard" fullWidth />
+       <TextField  onChange={(e)=>setPinCode(e.target.value)} label="Pin Code" variant="standard" fullWidth />
        </Grid>
        <Grid item xs={6}  style={{marginTop:5,width:'45%'}} >
-       <TextField  label="House No." variant="standard" fullWidth />
+       <TextField  onChange={(e)=>setHouseNo(e.target.value)}   label="House No." variant="standard" fullWidth />
        </Grid>
        <Grid item xs={6}  style={{marginTop:5,width:'45%'}} >
-       <TextField  label="Floor No." variant="standard" fullWidth />
+       <TextField  onChange={(e)=>setFloorNo(e.target.value)} label="Floor No." variant="standard" fullWidth />
        </Grid>
        <Grid item xs={12}  style={{width:'90%',marginTop:5}} >
-       <TextField  label="Tower No." variant="standard" fullWidth />
+       <TextField  onChange={(e)=>setTowerNo(e.target.value)} label="Tower No." variant="standard" fullWidth />
        </Grid>
        <Grid item xs={12}  style={{width:'90%',marginTop:5}} >
-       <TextField  label="Building / Apartment Name" variant="standard" fullWidth />
+       <TextField  onChange={(e)=>setBuilding(e.target.value)} label="Building / Apartment Name" variant="standard" fullWidth />
        </Grid>
        <Grid item xs={12}  style={{width:'90%',marginTop:5}} >
-       <TextField  label="Address" variant="standard" fullWidth />
+       <TextField  onChange={(e)=>setAddress(e.target.value)} label="Address" variant="standard" fullWidth />
        </Grid>
        <Grid item xs={12}  style={{width:'90%',marginTop:5}} >
-       <TextField  label="Landmark / Area" variant="standard" fullWidth />
+       <TextField  onChange={(e)=>setLandmark(e.target.value)} label="Landmark / Area" variant="standard" fullWidth />
        </Grid>
        <Grid item xs={12}  style={{width:'90%',marginTop:5}} >
-       <TextField  label="City, State" variant="standard" fullWidth />
+       <TextField  onChange={(e)=>setCity(e.target.value)}  label="City" variant="standard" fullWidth />
        </Grid>
-       <Grid item xs={12}>
-       <Button style={{borderRadius:25,height:53,marginTop:10,color:'#fff',background:'#0078ad',fontFamily:'JioType, helvetica, arial, sans-serif',fontWeight:700,fontSize:14,letterSpacing:-0.07,lineHeight: 1.4285714286,width:'95%'}} fullWidth>Save and Proceed</Button>
+       <Grid item xs={12}  style={{width:'90%',marginTop:5}} >
+       <TextField  onChange={(e)=>setState(e.target.value)}  label="State" variant="standard" fullWidth />
+       </Grid>
+      
+          
+
+       <Grid  item xs={12}>
+       <Button onClick={handleSubmitAddress} style={{borderRadius:25,height:53,marginTop:10,color:'#fff',background:'#0078ad',fontFamily:'JioType, helvetica, arial, sans-serif',fontWeight:700,fontSize:14,letterSpacing:-0.07,lineHeight: 1.4285714286,width:'95%'}} fullWidth>Save and Proceed</Button>
        </Grid>
        </Grid>       
        </div>
@@ -142,13 +321,13 @@ const handleClose=(bool)=>{
                 Save as
         </div>
         <div style={{display:'flex',marginLeft:20,justifyContent:'space-evenly'}}>
-            <div style={{cursor:'pointer',width:70,height:28,border:'1px solid #ddd',display:'flex',justifyContent:'center',borderRadius:15,padding:3,color:'#0078ad',marginTop:2,fontWeight: 500,fontSize: 15,letterSpacing: 0.25,lineHeight: 1.4285714286,alignItems:'center'}}>
+            <div style={{cursor:'pointer',width:70,height:28,border:'1px solid #ddd',display:'flex',justifyContent:'center',borderRadius:15,padding:3,color:selectedAddressType === 'Home' ? '#fff' : '#0078ad',backgroundColor:selectedAddressType === 'Home' ? '#0078ad' : 'transparent',marginTop:2,fontWeight: 500,fontSize: 15,letterSpacing: 0.25,lineHeight: 1.4285714286,alignItems:'center'}} onClick={() => handleAddressTypeSelect('Home')}>
                     Home
             </div>
-            <div style={{cursor:'pointer',width:70,height:28,border:'1px solid #ddd',display:'flex',justifyContent:'center',borderRadius:15,padding:3,color:'#0078ad',marginTop:2,fontWeight: 500,fontSize: 15,letterSpacing: 0.25,lineHeight: 1.4285714286,alignItems:'center'}}>
+            <div style={{cursor:'pointer',width:70,height:28,border:'1px solid #ddd',display:'flex',justifyContent:'center',borderRadius:15,padding:3,color:selectedAddressType === 'Work' ? '#fff' : '#0078ad',backgroundColor:selectedAddressType === 'Work' ? '#0078ad' : 'transparent',marginTop:2,fontWeight: 500,fontSize: 15,letterSpacing: 0.25,lineHeight: 1.4285714286,alignItems:'center'}} onClick={() => handleAddressTypeSelect('Work')}>
                     Work
             </div>
-            <div style={{cursor:'pointer',width:70,height:28,border:'1px solid #ddd',display:'flex',justifyContent:'center',borderRadius:15,padding:3,color:'#0078ad',marginTop:2,fontWeight: 500,fontSize: 15,letterSpacing: 0.25,lineHeight: 1.4285714286,alignItems:'center'}}>
+            <div style={{cursor:'pointer',width:70,height:28,border:'1px solid #ddd',display:'flex',justifyContent:'center',borderRadius:15,padding:3,color:selectedAddressType === 'Other' ? '#fff' : '#0078ad',backgroundColor:selectedAddressType === 'Other' ? '#0078ad' : 'transparent',marginTop:2,fontWeight: 500,fontSize: 15,letterSpacing: 0.25,lineHeight: 1.4285714286,alignItems:'center'}} onClick={() => handleAddressTypeSelect('Other')}>
                     Other
             </div>
            </div>
@@ -216,11 +395,14 @@ const handleClose=(bool)=>{
              You Saved &#8377;{discount.toFixed(2)}
         </div>
     </div>
-      <Button style={{border:'1px solid #ddd',borderRadius:25, width:matches?'91%':'93%',height:53,marginTop:10,color:'#fff',background:'#0078ad',fontFamily:'JioType, helvetica, arial, sans-serif',fontWeight:700,fontSize:14,letterSpacing:-0.07,lineHeight: 1.4285714286}} onClick={handlePlaceOrder} fullWidth>Place Order</Button>
+      <Button style={{border:'1px solid #ddd',borderRadius:25, width:matches?'91%':'93%',height:53,marginTop:10,color:'#fff',background:'#0078ad',fontFamily:'JioType, helvetica, arial, sans-serif',fontWeight:700,fontSize:14,letterSpacing:-0.07,lineHeight: 1.4285714286}} onClick={handlePlaceOrder} fullWidth>{btnTxt}</Button>
      </div>
-     <Drawer anchor={"right"} open={open} onClose={()=>handleClose(false)}>
+     <Drawer anchor="right" open={open} onClose={handleClose}>
+     <div style={{ padding: 20, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       {addressView()}
-      </Drawer>
+    </div>
+</Drawer>
+
         </div>
     )
 }

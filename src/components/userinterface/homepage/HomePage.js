@@ -16,10 +16,12 @@ export default function HomePage()
     const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("md"));
     
-    const fetchAllProductDetails=async(productstatus)=>{
-        var result=await postData('userinterface/display_all_productdetail_by_status',{productstatus})
-        setPopularProducts(result.data) 
-   }
+  const fetchAllProductDetails = async (productstatus) => {
+    var result = await postData('userinterface/display_all_productdetail_by_status', { productstatus });
+    //console.log("API Response:", result);
+    setPopularProducts(result.data);
+};
+
     const fetchAllOffers=async()=>{
         var result=await getData('userinterface/all_adoffers')
         setAdOffer(result.data) 
@@ -36,7 +38,7 @@ export default function HomePage()
       fetchAllBanners()
       fetchAllBankOffer()
       fetchAllOffers()
-      fetchAllProductDetails('Popular')
+      fetchAllProductDetails('Trending')
     },[])
     return(<div style={{display:'flex',justifyContent:'center',flexDirection:'column'}}>
         <div>

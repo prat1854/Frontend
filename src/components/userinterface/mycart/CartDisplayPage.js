@@ -6,13 +6,18 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import { useState } from "react";
+import { useSelector } from 'react-redux';  
+
 export default function CartDisplay()
 {
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.up('md'));
-    const [refresh,setRefresh]=useState(true)
+    const [refresh,setRefresh]=useState(true);
+    const user = useSelector(state => state.user);
+    const userData = Object.values(user);
+    // Check if user has address information
+    const hasAddress = userData.length > 0 && userData[0].address;
 
-    
 return(<div>
     
     <Grid container spacing={1}>
