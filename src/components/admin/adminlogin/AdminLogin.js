@@ -22,7 +22,7 @@ function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://Quickcomm.com/">
+      <Link color="inherit" href="http://localhost:3000/homepage">
         QuickComm Pvt. Ltd. Mumbai
       </Link>{' '}
       {new Date().getFullYear()}

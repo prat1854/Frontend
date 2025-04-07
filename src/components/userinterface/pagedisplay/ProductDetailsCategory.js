@@ -54,7 +54,6 @@ export default function ProductDetailsCategory({productData,refresh,setRefresh})
 {  var cartData=useSelector((state)=>state?.cart)
 
    var keys=Object.keys(cartData)
-   console.log("XXXXXXX",cartData)
    var dispatch=useDispatch()
     const [expanded, setExpanded] = React.useState('');
 

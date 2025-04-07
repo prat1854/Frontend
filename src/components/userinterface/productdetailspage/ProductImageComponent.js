@@ -42,7 +42,7 @@ export default function ProductImageComponent({refresh,setRefresh,product,setPro
   };
  
   const [productImages,setProductImages]=useState([])
-  const [selectedImage,setSelectedImage]=useState(product.picture)
+  const [selectedImage,setSelectedImage]=useState(product?.picture || '')   // yeh issue aa rhi thi reading map
 const fetchAllImages=async()=>{
 var response=await postData('userinterface/user_display_product_pictures',{productdetailid:product?.productdetailid})
 
@@ -50,7 +50,7 @@ setProductImages(response?.data[0]?.filenames?.split(","))
 
 }
     useEffect(()=>{
-      setSelectedImage(product.picture)
+      setSelectedImage(product?.picture || '')
       fetchAllImages()
     },[product]) 
 
@@ -62,11 +62,11 @@ const handleImage=(item)=>{
 }
 
   const showImage = () => {
-    return productImages.map((item, i) => {
+    return productImages && productImages.length > 0 ? productImages.map((item, i) => {
       return <div >
         <img  onClick={()=>handleImage(item)} src={`${serverURL}/images/${item}`} style={{ width: '60%', borderRadius: 20, border: '1px solid #e0e0e0', padding: 6, }} />
       </div>
-    })
+    }) : null
   }
 
 

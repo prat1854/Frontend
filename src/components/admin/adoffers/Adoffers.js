@@ -144,7 +144,6 @@ const showThumbnails = () => {
 }
 
 const handleImage = (e) => {
-     console.log("xxxxxxxxxxxxxxxx", e.target.files)
     handleErrorMessages('filenames', null)
     setFilenames({ bytes: Object.values(e.target.files), /*fileName: URL.createObjectURL(e.target.files[0]) THIS fileName not use in working*/ })
 }

@@ -61,7 +61,6 @@ export default function Otp() {
         dispatch({ type: "ADD_USER", payload: [response.data.userid, response.data] });
         var res = await postData('userinterface/check_user_address', { userid: response.data.userid });
         if (res.status && res.data && res.data.length > 0) {
-          console.log("Address data:", res.data[0]);
           var userDataWithAddress = { ...response.data, ...res.data[0] };
           dispatch({ type: "ADD_USER", payload: [response.data.userid, userDataWithAddress] });
         }

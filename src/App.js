@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router,Route,Routes } from "react-router-dom";
 import AdminLogin from "./components/admin/adminlogin/AdminLogin";
 import Dashboard from "./components/admin/adminlogin/Dashboard";
@@ -9,8 +8,11 @@ import CartDisplayPage from "./components/userinterface/mycart/CartDisplayPage"
 import Login from "./components/userinterface/signin/Login"
 import Otp from "./components/userinterface/signin/Otp"
 import SetUp  from "./components/userinterface/signin/SetUp"
-import Signin from "./components/admin/adminlogin/Signin";
+import Signin from "./components/admin/adminlogin/AdminLogin";
 import MakePayment from "./components/userinterface/mycart/MakePayment";
+import UserDashboard from "./components/userinterface/dashboard/UserDashboard";
+import About from "./components/userinterface/dashboard/about";
+import FAQ from "./components/userinterface/dashboard/faq";
 function App() {
   return (
    <div>
@@ -27,7 +29,9 @@ function App() {
         <Route element={<SetUp/>} path="/setup"></Route>
         <Route element={<Signin/>} path="/signin"></Route>
         <Route element={<MakePayment/>} path="/makepayment"></Route>
-
+        <Route element={<UserDashboard/>} path="/userdashboard"></Route>
+        <Route element={<About/>}path="/about"></Route>
+        <Route element={<FAQ/>}path="/faq"></Route>
       </Routes>
     </Router>
    

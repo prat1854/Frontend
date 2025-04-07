@@ -17,30 +17,22 @@ const createDate=(date)=>{
 
 const postData = async (url, body) => {
   try {
-    const response = await axios.post(`${serverURL}/${url}`, body);
-    //console.log(`✅ POST ${url} success:`, response.data);
-    return response.data;
-  } catch (error) {
-   // console.error(`❌ POST ${url} failed:`, error?.response?.data || error.message);
-    return error?.response?.data || { status: false, message: 'Unknown error occurred' };
+    var response = await axios.post(`${serverURL}/${url}`, body);
+    var result = response.data;
+    return result;
+  } catch (e) {
+    return null;
   }
+};
 
-}
-
-const getData=async(url)=>{
-  try{
-  var response= await axios.get(`${serverURL}/${url}`)  
-  var result=response.data
-  return result
+const getData = async (url) => {
+  try {
+    var response = await axios.get(`${serverURL}/${url}`);
+    var result = response.data;
+    return result;
+  } catch (e) {
+    return null;
   }
-  catch(e)
-  {
-    return e.response.data
-  }
-
-
-}
-
-
+};
 
 export{ postData,serverURL,currentDate,getData,createDate}

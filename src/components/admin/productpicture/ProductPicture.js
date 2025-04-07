@@ -178,14 +178,8 @@ export default function ProductPicture(props) {
 
 
   }
-  function handleImage(e) {
-    
-    handleErrorMessages("filenames", null);
-    console.log("xxxxxxxxxxxxxxxxxx",e.target.files) 
-    setFilenames({
-      bytes: Object.values(e.target.files),
-      fileName: URL.createObjectURL(e.target.files[0]),
-    });
+  const handleImage=(event)=>{
+     setFilenames({bytes:event.target.files[0],file:URL.createObjectURL(event.target.files[0])})
   }
 
   const resetValue = () => {

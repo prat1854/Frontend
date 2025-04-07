@@ -11,6 +11,7 @@ import Rating from '@mui/material/Rating';
 import ShareIcon from '@mui/icons-material/Share';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import parse from 'html-react-parser';
+import copyIcon from "../../../assets/copydesktopicon.svg";
 
 export default function ProductDescription({product,setProduct}) {
             
@@ -18,6 +19,15 @@ export default function ProductDescription({product,setProduct}) {
 const [productList,setProductList]=useState([])
 const [productDetailid,setProductDetailId]=useState(product.productdetailid)
 const [color,setColor]=useState('#000')
+
+const handleShareOnWhatsApp = () => {
+  const productText = `Check out this product: ${product.productname} - ${product.productdetailname} ${product.weight} ${product.weighttype}`;
+  const productPrice = product.offerprice > 0 ? `₹${product.offerprice} (${parseInt(((product.price - product.offerprice) / product.price) * 100)}% Off)` : `₹${product.price}`;
+  const shareText = `${productText}\nPrice: ${productPrice}`;
+  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+  window.open(whatsappUrl, '_blank');
+}
+
 const fetchAllProductsById=async()=>{
 var response=await postData('userinterface/user_display_product_details_by_id',{productid:product?.productid})
 setProductList(response.data)
@@ -71,7 +81,7 @@ setProductList(response.data)
           <Rating name="read-only" value={4} readOnly />
           <span style={{ marginLeft: 330, display: 'flex' }}>
             <span ><FavoriteBorderIcon/> </span>
-            <span style={{ marginLeft: 10, marginTop: 2 }}><ShareIcon /> </span>
+            <span style={{ marginLeft: 10, marginTop: 2, cursor: 'pointer' }} onClick={handleShareOnWhatsApp}><ShareIcon /> </span>
           </span>
         </div>
 
@@ -297,7 +307,7 @@ const soldby = () => {
             letterSpacing: -0.08,
             lineHeight: 1.5,
             color: 'grey'
-          }}><img src="/smartbazaar.png" style={{width:100,height:30}}/></span>
+          }}><img src={require("../../../assets/logo.png")} style={{width:60,height:45}}/></span>
          
         </div>
 
@@ -331,11 +341,11 @@ const description = () => {
             letterSpacing: -0.08,
             lineHeight: 1.5,
             color: '#141414'
-          }}>TArticle ID: 490005134 
+          }}>Article ID: 490005134 
          </span> 
          <span style={{
           marginLeft:10,
-          }}><img src="/copyicon.png" style={{width:20,height:20, marginTop:6}}/></span>
+          }}><img src={copyIcon} style={{width:20,height:20, marginTop:6}}/></span>
         </div>
 
       </div>

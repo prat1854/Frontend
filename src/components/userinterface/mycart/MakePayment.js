@@ -36,12 +36,8 @@ export default function MakePayment() {
       image: `http://${serverURL}/images/logo.jpg`,
     
       handler: (res) => {
-       // console.log(res);
-       
         dispatch({type:'CLEAR_CART',payload:[]})
         navigate("/homepage")
-        
-
       },
       prefill: {
         name: userdata?.fullname,

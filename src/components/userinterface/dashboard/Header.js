@@ -28,26 +28,22 @@ export default function Header() {
   const matches = useMediaQuery(theme.breakpoints.up('md'));
   const [open,setOpen]=useState(false)
   
-  // More robust check if user is logged in
-  const isUserLoggedIn = userData && 
-                        userData.length > 0 && 
-                        userData[0] && 
-                        Object.keys(userData[0]).length > 0 && 
-                        userData[0]?.firstname;
+  // Check if user is logged in
+  const isUserLoggedIn = userData && userData.length > 0 && userData[0]?.firstname;
   
   const handleClick=()=>{
     setOpen(true)
   }
 
   const handleSignInClick = () => {
-    navigate('/login');
+    navigate('/login'); // Replace with your login route
   };
 
   const handleUserProfileClick = () => {
     if (isUserLoggedIn) {
-      navigate('/userdashboard');
+      navigate('/userdashboard'); // Navigate to the user dashboard
     } else {
-      navigate('/login');
+      navigate('/login'); // Navigate to login if not logged in
     }
   };
   
@@ -70,7 +66,7 @@ export default function Header() {
             <img src={logo} style={{width:70,height:70}}/>
             <div style={{fontWeight:'bold',fontSize:24}}>QuickComm</div>
           </Typography>
-       {matches?<TextBoxSearch/>:<div></div>}
+       {matches?<TextBoxSearch />:<div></div>}
           
 
 

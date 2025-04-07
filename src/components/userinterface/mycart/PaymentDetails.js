@@ -61,8 +61,8 @@ const handlePayment = () => {
       handler: (res) => {
       //  console.log("Payment successful:", res);
         
-        dispatch({type:'CLEAR_CART',payload:[]})
-        navigate("/homepage")
+        // Save order to Redux
+        saveOrderToDatabase(res.razorpay_payment_id);
       },
       prefill: {
         name: userData[0]?.firstname + " " + userData[0]?.lastname,
@@ -84,6 +84,91 @@ const handlePayment = () => {
     alert("Payment failed to initialize. Please try again.");
   }
 }
+
+const saveOrderToDatabase = async (paymentId) => {
+  try {
+    // Prepare order data
+    const orderItems = data.map(item => ({
+      productid: item.productid,
+      productdetailid: item.productdetailid,
+      name: item.productname,
+      price: item.offerprice > 0 ? item.offerprice : item.price,
+      qty: item.qty,
+      image: item.picture
+    }));
+    
+    // Prepare order details
+    const orderData = {
+      orderid: 'ORD' + Date.now(), // Generate a unique order ID
+      userid: userData[0]?.userid,
+      orderdate: new Date().toISOString(),
+      paymentid: paymentId,
+      status: 'Processing',
+      amount: totalamount - discount,
+      items: orderItems,
+      address: {
+        address: userData[0]?.address,
+        city: userData[0]?.city,
+        state: userData[0]?.state,
+        pincode: userData[0]?.pincode
+      }
+    };
+    
+    // Save to Redux
+    dispatch({type: 'ADD_ORDER', payload: orderData});
+    
+    // Clear the cart and navigate to dashboard
+    dispatch({type: 'CLEAR_CART', payload: []});
+    
+    // Show success message and navigate
+    Swal.fire({
+      icon: "success",
+      text: "Order placed successfully!",
+      showConfirmButton: false,
+      timer: 1500,
+      toast: true
+    });
+    
+    // Navigate to dashboard after a short delay
+    setTimeout(() => {
+      navigate('/userdashboard');
+    }, 1500);
+
+    // Send order confirmation email
+    try {
+      const emailData = {
+        to: userData[0]?.emailaddress,
+        subject: `Order Confirmation - ${orderData.orderid}`,
+        orderData: orderData,
+        customerName: `${userData[0]?.firstname} ${userData[0]?.lastname}`
+      };
+      
+      // Make API call to send email confirmation
+      // Note: Backend endpoint needs to be implemented at 'userinterface/send_order_confirmation'
+      // The backend should use a service like Nodemailer to send emails with order details
+      const emailResponse = await postData('userinterface/send_order_confirmation', emailData);
+      console.log("Email confirmation sent:", emailResponse);
+    } catch (emailError) {
+      console.error("Error sending confirmation email:", emailError);
+      // Don't halt the process if email fails
+    }
+  } catch (error) {
+    console.error("Error saving order:", error);
+    // Show error but still navigate
+    Swal.fire({
+      icon: "error",
+      text: "Error saving order details, but payment was successful.",
+      showConfirmButton: false,
+      timer: 2000,
+      toast: true
+    });
+    
+    // Clear cart and navigate anyway
+    dispatch({type: 'CLEAR_CART', payload: []});
+    navigate('/homepage');
+  }
+}
+
 useEffect(function(){
 const script = document.createElement("script");
 script.src = "https://checkout.razorpay.com/v1/checkout.js";
@@ -116,7 +201,6 @@ document.body.appendChild(script);
         city: city, 
         state: state
       };
-      console.log("PaymentDetails - Submitting address:", body);
       var response=await postData('userinterface/submit_user_address',body);
       if(response.status)
         { 
@@ -202,18 +286,11 @@ const handlePlaceOrder=async()=>{
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
-            console.log(
-              "Latitude:",
-              position.coords.latitude,
-              "Longitude:",
-              position.coords.longitude
-            );
             alert(
               `Location fetched: ${position.coords.latitude}, ${position.coords.longitude}`
             );
           },
           (error) => {
-            console.error("Error fetching location:", error);
             alert("Unable to fetch location. Please enable location services.");
           }
         );

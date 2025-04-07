@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { serverURL } from "../../../services/FetchNodeAdminServices";
+import { serverURL, postData } from "../../../services/FetchNodeAdminServices";
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { useRef } from "react";
@@ -10,10 +10,15 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { setRef } from "@mui/material";
 import { auto } from "@popperjs/core";
+
 export default function OfferScroll({state,addata}){
     var scrollRef=useRef()
     const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up('md'));
+    const matches = useMediaQuery(theme.breakpoints.up('md'));
+    const [offerData, setOfferData] = useState([]);
+    const [error, setError] = useState(false);
+    const [loading, setLoading] = useState(true);
+
     var settings = {
         dots: false,
         infinite: true,
@@ -30,9 +35,6 @@ export default function OfferScroll({state,addata}){
       const data = ['a1.webp', 'a2.webp', 'a3.webp', 'a4.webp', 'a5.webp'];
 
       const showImages = () => {
-       //   console.log("Data Array:", data);
-      // console.log("Rendering Images...");
-      
       return data.map((item, index) => {
           return (
               <div key={index}>
@@ -54,6 +56,23 @@ scrollRef.current.slickNext()
 const handlePrev=()=>{
     scrollRef.current.slickPrev()
 }
+
+useEffect(() => {
+    fetchOffers();
+  }, []);
+
+  const fetchOffers = async () => {
+    try {
+      const result = await postData('userinterface/fetch_offer_scroll_images');
+      if(result.status) {
+        setOfferData(result.data);
+      }
+    } catch (error) {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
 
 return(<div  style={{position:'relative'}}>
 
