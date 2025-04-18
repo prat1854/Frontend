@@ -66,7 +66,7 @@ export default function Header() {
           </IconButton>}
           <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',width:'100%'}}>
           
-          <Typography onClick={()=>navigate('/homepage')}  variant="h6" component="div" style={{cursor:'pointer', display:'flex',alignItems:'center' }}>
+          <Typography onClick={()=>navigate('/')}  variant="h6" component="div" style={{cursor:'pointer', display:'flex',alignItems:'center' }}>
             <img src={logo} style={{width:70,height:70}}/>
             <div style={{fontWeight:'bold',fontSize:24}}>QuickComm</div>
           </Typography>
