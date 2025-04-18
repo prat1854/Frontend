@@ -22,7 +22,10 @@ function App() {
       <Routes>
         <Route element={<AdminLogin/>} path="/adminlogin"></Route>
         <Route element={<Dashboard/>} path="/dashboard/*"></Route>
-        <Route element={<HomePage/>} path="/homepage"></Route>
+
+
+        // Earlier it was /homepage instead, now I changed it to /
+        <Route element={<HomePage/>} path="/"></Route> 
         <Route element={<PageCategoryDisplay/>} path="/pagecategorydisplay"></Route>
         <Route element={<ProductDetailPage/>} path="/productdetailpage"></Route>
         <Route element={<CartDisplayPage/>} path="/cartdisplaypage"></Route>
