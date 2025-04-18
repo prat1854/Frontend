@@ -13,6 +13,8 @@ import MakePayment from "./components/userinterface/mycart/MakePayment";
 import UserDashboard from "./components/userinterface/dashboard/UserDashboard";
 import About from "./components/userinterface/dashboard/about";
 import FAQ from "./components/userinterface/dashboard/faq";
+import TermsAndConditions from "./components/userinterface/dashboard/TermsAndConditions";
+import PrivacyPolicy from "./components/userinterface/dashboard/PrivacyPolicy";
 function App() {
   return (
    <div>
@@ -32,6 +34,8 @@ function App() {
         <Route element={<UserDashboard/>} path="/userdashboard"></Route>
         <Route element={<About/>}path="/about"></Route>
         <Route element={<FAQ/>}path="/faq"></Route>
+        <Route element={<TermsAndConditions/>} path="/terms"></Route>
+        <Route element={<PrivacyPolicy/>} path="/privacy"></Route>
       </Routes>
     </Router>
    

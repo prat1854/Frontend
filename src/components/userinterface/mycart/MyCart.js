@@ -366,7 +366,7 @@ export default function MyCart({refresh,setRefresh})
             </div>
 
             {/* Cart Details */}
-            <div style={{ padding: '15px' }}>{CartDetails()}</div>
+            <div style={{ padding: '10px' }}>{CartDetails()}</div>
           </div>
         </div>
         

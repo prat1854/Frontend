@@ -84,20 +84,24 @@ export default function Footer() {
               window.scrollTo(0, 0);
               navigate('/faq');
             }}>  FAQ  </div> 
-            <div style={{color: '#636e72',fontWeight: 500,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,padding: 8}}>  Terms & Conditions  </div> 
-            <div style={{color: '#636e72',fontWeight: 500,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,padding: 8}}>  Privacy Policy  </div> 
-            <div style={{color: '#636e72',fontWeight: 500,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,padding: 8}}> E-waste Policy </div> 
+            <div style={{color: '#636e72',fontWeight: 500,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,padding: 8, cursor: 'pointer'}} onClick={() => {
+              window.scrollTo(0, 0);
+              navigate('/terms');
+            }}>  Terms & Conditions  </div> 
+            <div style={{color: '#636e72',fontWeight: 500,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,padding: 8, cursor: 'pointer'}} onClick={() => {
+              window.scrollTo(0, 0);
+              navigate('/privacy');
+            }}>  Privacy Policy  </div> 
             <div style={{color: '#636e72',fontWeight: 500,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,padding: 8}}> Cancellation & Return Policy  </div> 
             <div style={{color: '#636e72',fontWeight: 500,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,padding: 8}}> Shipping & Delivery Policy  </div>
-            <div style={{color: '#636e72',fontWeight: 500,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,padding: 8}}> AC Installation by resQ   </div>
           </Grid>
 
           <Grid item xs={12} md={4} sx={{ mb: { xs: 3, md: 0 } }}>
             <div style={{fontWeight: 900,fontSize: 24,letterSpacing: -0.72,lineHeight: 1,paddingBottom: 16,color: '#141414',marginTop:12}}> Contact Us </div> 
             <div><span style={{fontWeight: 500,fontSize: 14,letterSpacing: -0.07,lineHeight: 1.4285714286,color:'rgba(0, 0, 0, .65)'}}>WhatsApp us: </span>
-                  <span style={{fontWeight: 700,fontSize: 13.3,letterSpacing: -0.07,lineHeight: 1.4285714286,color: '#0c5273'}}>70003 70003</span></div>
+                  <span style={{fontWeight: 700,fontSize: 13.3,letterSpacing: -0.07,lineHeight: 1.4285714286,color: '#0c5273'}}>74704 39101</span></div>
             <div><span style={{fontWeight: 500,fontSize: 14,letterSpacing: -0.07,lineHeight: 1.4285714286,color:'rgba(0, 0, 0, .65)'}}>Call us: </span>
-                  <span style={{fontWeight: 700,fontSize: 13.3,letterSpacing: -0.07,lineHeight: 1.4285714286,color: '#0c5273'}}>1800 890 1222</span></div>
+                  <span style={{fontWeight: 700,fontSize: 13.3,letterSpacing: -0.07,lineHeight: 1.4285714286,color: '#0c5273'}}>1800 777 1000</span></div>
             <div style={{paddingBottom: 24,fontWeight: 500,fontSize: 14,letterSpacing: -0.07,lineHeight: 1.4285714286,color:'rgba(0, 0, 0, .65)'}}>8:00 AM to 8:00 PM, 365 days</div> 
             
             <div style={{maxWidth: '100%'}}><span style={{ fontWeight: 500,fontSize: 14,letterSpacing: -0.07,lineHeight: 1.4285714286,color:'rgba(0, 0, 0, .65)'}}>
