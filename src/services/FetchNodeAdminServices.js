@@ -1,7 +1,7 @@
 import axios from 'axios'
 //const serverURL='http://192.168.29.195:5000' //mobile me access karne ke liye 
-
-const serverURL='http://localhost:5000' // pc yeh laptop me access krni hai toh 
+const serverURL ='https://quickcombackend.onrender.com' //LIVE SERVER 
+//const serverURL='http://localhost:5000' // pc yeh laptop me access krni hai toh 
 const currentDate=()=>{
   var d=new Date()
   var cd=d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()
