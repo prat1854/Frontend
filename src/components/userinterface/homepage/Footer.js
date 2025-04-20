@@ -67,11 +67,46 @@ export default function Footer() {
            
           <Grid item xs={12} sm={6} md={2} sx={{ mb: { xs: 3, md: 0 } }}> 
             <div style={{fontWeight:800,fontSize:17,marginBottom:10,padding: 8,color:'#141414'}}> Customer Account </div> 
-            <div style={{color: '#636e72',fontWeight: 500,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,padding: 8}}> My Account </div> 
-            <div style={{color: '#636e72',fontWeight: 500,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,padding: 8}}> My Orders </div> 
-            <div style={{color: '#636e72',fontWeight: 500,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,padding: 8}}> Wishlist </div> 
-            <div style={{color: '#636e72',fontWeight: 500,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,padding: 8}}> Delivery Addresses </div> 
-            <div style={{color: '#636e72',fontWeight: 500,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,padding: 8}}> JioMart Wallet </div> 
+            <div style={{color: '#636e72',fontWeight: 500,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,padding: 8, cursor: 'pointer'}} onClick={() => {
+              const isLoggedIn = localStorage.getItem('user') || sessionStorage.getItem('user');
+              if (isLoggedIn) {
+                navigate('/userdashboard');
+              } else {
+                navigate('/login');
+              }
+            }}> My Account </div> 
+            <div style={{color: '#636e72',fontWeight: 500,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,padding: 8, cursor: 'pointer'}} onClick={() => {
+              const isLoggedIn = localStorage.getItem('user') || sessionStorage.getItem('user');
+              if (isLoggedIn) {
+                navigate('/userdashboard');
+              } else {
+                navigate('/login');
+              }
+            }}> My Orders </div> 
+            <div style={{color: '#636e72',fontWeight: 500,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,padding: 8, cursor: 'pointer'}} onClick={() => {
+              const isLoggedIn = localStorage.getItem('user') || sessionStorage.getItem('user');
+              if (isLoggedIn) {
+                navigate('/userdashboard');
+              } else {
+                navigate('/login');
+              }
+            }}> Wishlist </div> 
+            <div style={{color: '#636e72',fontWeight: 500,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,padding: 8, cursor: 'pointer'}} onClick={() => {
+              const isLoggedIn = localStorage.getItem('user') || sessionStorage.getItem('user');
+              if (isLoggedIn) {
+                navigate('/userdashboard');
+              } else {
+                navigate('/login');
+              }
+            }}> Delivery Addresses </div> 
+            <div style={{color: '#636e72',fontWeight: 500,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,padding: 8, cursor: 'pointer'}} onClick={() => {
+              const isLoggedIn = localStorage.getItem('user') || sessionStorage.getItem('user');
+              if (isLoggedIn) {
+                navigate('/userdashboard');
+              } else {
+                navigate('/login');
+              }
+            }}> JioMart Wallet </div> 
           </Grid>
 
           <Grid item xs={12} sm={6} md={2} sx={{ mb: { xs: 3, md: 0 } }}> 

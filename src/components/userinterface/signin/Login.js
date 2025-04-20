@@ -85,7 +85,7 @@ export default function Login() {
             <div>
               <img
                 src={"/cross.png"}
-                onClick={() => navigate("/homepage")}
+                onClick={() => navigate("/")}
                 style={{ width: 20, height: 20, cursor: "pointer" }}
                 alt="close"
               />
