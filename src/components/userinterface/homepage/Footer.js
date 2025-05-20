@@ -106,7 +106,7 @@ export default function Footer() {
               } else {
                 navigate('/login');
               }
-            }}> JioMart Wallet </div> 
+            }}> QuickComm Wallet </div> 
           </Grid>
 
           <Grid item xs={12} sm={6} md={2} sx={{ mb: { xs: 3, md: 0 } }}> 
@@ -127,8 +127,14 @@ export default function Footer() {
               window.scrollTo(0, 0);
               navigate('/privacy');
             }}>  Privacy Policy  </div> 
-            <div style={{color: '#636e72',fontWeight: 500,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,padding: 8}}> Cancellation & Return Policy  </div> 
-            <div style={{color: '#636e72',fontWeight: 500,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,padding: 8}}> Shipping & Delivery Policy  </div>
+            <div style={{color: '#636e72',fontWeight: 500,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,padding: 8 , cursor:'pointer'}} onClick={() => {
+              window.scrollTo(0,0);
+              navigate('/Cancellation&ReturnPolicy')
+            }}  > Cancellation & Return Policy  </div> 
+            <div style={{color: '#636e72',fontWeight: 500,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,padding: 8 , cursor:'pointer'}} onClick={()=> {
+              window.scrollTo(0,0);
+              navigate('/DeliveryShippingPolicy')
+            }} > Shipping & Delivery Policy  </div>
           </Grid>
 
           <Grid item xs={12} md={4} sx={{ mb: { xs: 3, md: 0 } }}>

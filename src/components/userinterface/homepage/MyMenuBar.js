@@ -63,7 +63,7 @@ const showSubCategoryMenu=()=>{
         <Toolbar style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
           
           {showCategoryMenu()}
-          <Button  style={{color:'#fff',fontWeight:'bold',marginLeft:10}}>All Category</Button>
+          {/* <Button  style={{color:'#fff',fontWeight:'bold',marginLeft:10}}>All Category</Button> */}
 
           <Menu
         anchorEl={anchorEl}

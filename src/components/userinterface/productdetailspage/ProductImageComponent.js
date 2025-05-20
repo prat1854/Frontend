@@ -11,8 +11,8 @@ import { Avatar, Divider, Grid, Paper, List, ListItem, ListItemButton, ListItemI
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+// import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+// import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useRef } from "react";
 import { useDispatch,useSelector } from "react-redux";
 import { useNavigate} from "react-router-dom";
@@ -113,9 +113,9 @@ const handleImage=(item)=>{
   
     <div style={{ marginLeft:20, display: 'flex', marginTop: 10, position: 'relative' }}>
        
-      <div onClick={handleNext} style={{ cursor: 'pointer', marginLeft: -3, marginBottom: 50, marginTop: 5, position: 'absolute', zIndex: 1, background: '#fff', width: 80, height: 35, verticalAlign: 'top', transition: 'cubic-bezier(0.35, 0, 0.25, 1) 300ms', borderRadius: 22, border: '1px solid #e0e0e0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      {/* <div onClick={handleNext} style={{ cursor: 'pointer', marginLeft: -3, marginBottom: 50, marginTop: 5, position: 'absolute', zIndex: 1, background: '#fff', width: 80, height: 35, verticalAlign: 'top', transition: 'cubic-bezier(0.35, 0, 0.25, 1) 300ms', borderRadius: 22, border: '1px solid #e0e0e0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <KeyboardArrowUpIcon style={{ color: '#0c5273' }} />
-      </div>
+      </div> */}
 
       <div elevation={0.5} >
         <Slider ref={scrollRef} {...settings} style={{ position: 'relative', objectFit: 'contain', marginTop: 35, paddingTop: 15, overflow: 'hidden', width: 100, }}>
@@ -123,9 +123,9 @@ const handleImage=(item)=>{
         </Slider>
       </div>
 
-      <div onClick={handlePrev} style={{ cursor: 'pointer', marginLeft: -3, marginTop: 380, position: 'absolute', zIndex: 1, background: '#fff', width: 80, height: 35, transition: 'cubic-bezier(0.35, 0, 0.25, 1) 300ms', borderRadius: 22, border: '1px solid #e0e0e0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      {/* <div onClick={handlePrev} style={{ cursor: 'pointer', marginLeft: -3, marginTop: 380, position: 'absolute', zIndex: 1, background: '#fff', width: 80, height: 35, transition: 'cubic-bezier(0.35, 0, 0.25, 1) 300ms', borderRadius: 22, border: '1px solid #e0e0e0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <KeyboardArrowDownIcon style={{ color: '#0c5273' }} />
-      </div>
+      </div> */}
 
 
       <Paper elevation={0.5} style={{ position: 'relative', padding: 16, borderRadius: 24, border: '1px solid #e0e0e0', overflow: 'hidden' ,height:550}}>

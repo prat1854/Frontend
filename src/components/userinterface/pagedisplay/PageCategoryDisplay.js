@@ -16,12 +16,15 @@ export default function PageCategoryDisplay()
   
   const fetchAllCategory=async()=>{
     var result=await getData('userinterface/user_display_all_subcategory')
+    console.log('Category API Response:', result)
     setCategory(result.data)
   }
   useEffect(()=>{
       fetchAllCategory()
   },[])
-  
+
+  console.log('Current category state:', category)
+  console.log('Current productData:', productData)
   
        return(<div style={{display:'flex',justifyContent:'center',flexDirection:'column'}}>
               
@@ -31,7 +34,7 @@ export default function PageCategoryDisplay()
 
               <div style={{marginTop: 50,display: 'flex',flexDirection:'column',position: 'relative',backgroundColor: '#fff'}}>
                 <span style={{display:'flex',backgroundColor: '#fff'}}>
-                  <ShowCategory data={category} scid={productData[0]?.subcategoryid}/>
+                  <ShowCategory data={category} scid={productData?.[0]?.subcategoryid} productData={productData}/>
                  <ProductDetailsCategory  refresh={refresh} setRefresh={setRefresh} productData={productData}/>
                  </span>
               </div>

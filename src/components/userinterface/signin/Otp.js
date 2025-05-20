@@ -38,16 +38,22 @@ export default function Otp() {
     setGenOtp(newOtp);
     setOtp('');
 
-    await postData("sms/sendotp", {
-      otp: newOtp,
-      mobileno: mobileno,
-    });
+    try {
+      await postData("sms/sendotp", {
+        otp: newOtp,
+        mobileno: mobileno,
+      });
 
-    setSnackbarMessage('OTP resent successfully!');
-    setSnackbarSeverity('success');
-    setSnackbarOpen(true);
+      setSnackbarMessage('OTP sent successfully to your mobile number!');
+      setSnackbarSeverity('success');
+      setSnackbarOpen(true);
 
-    setTimer(30);
+      setTimer(30);
+    } catch (error) {
+      setSnackbarMessage('Failed to send OTP. Please try again.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+    }
   };
 
   const handleChange = (newValue) => {

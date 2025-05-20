@@ -55,7 +55,7 @@ export default function Category(props)
         formData.append('categoryicon',categoryIcon.bytes)
         formData.append('created_at',currentDate())
         formData.append('updated_at',currentDate())
-        formData.append('user_admin','Farzi')
+        formData.append('user_admin','Aditya')
         
         var result=await postData('category/category_submit',formData)
         if(result.status)

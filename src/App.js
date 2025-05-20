@@ -15,6 +15,8 @@ import About from "./components/userinterface/dashboard/about";
 import FAQ from "./components/userinterface/dashboard/faq";
 import TermsAndConditions from "./components/userinterface/dashboard/TermsAndConditions";
 import PrivacyPolicy from "./components/userinterface/dashboard/PrivacyPolicy";
+import CancellationReturnPolicy from "./components/userinterface/dashboard/CancellationReturnPolicy";
+import DeliveryShippingPolicy from "./components/userinterface/dashboard/DeliveryShippingPolicy";
 function App() {
   return (
    <div>
@@ -36,6 +38,8 @@ function App() {
         <Route element={<FAQ/>}path="/faq"></Route>
         <Route element={<TermsAndConditions/>} path="/terms"></Route>
         <Route element={<PrivacyPolicy/>} path="/privacy"></Route>
+        <Route element={<CancellationReturnPolicy/>} path="/Cancellation&ReturnPolicy"></Route>
+        <Route element={<DeliveryShippingPolicy/>} path="/DeliveryShippingPolicy"></Route>
       </Routes>
     </Router>
    

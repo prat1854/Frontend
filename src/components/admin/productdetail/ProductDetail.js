@@ -1,14 +1,4 @@
-import {
-  FormHelperText,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Button,
-  Grid,
-  TextField,
-  Avatar,
-} from "@mui/material";
+import { FormHelperText,FormControl,InputLabel,Select,MenuItem,Button,Grid,TextField,Avatar,} from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import logo from "../../../assets/logo.png";
 import cart from "../../../assets/cart.png";
@@ -254,7 +244,7 @@ export default function ProductDetail(props) {
       formData.append("picture", picture.bytes);
       formData.append("created_at", currentDate());
       formData.append("updated_at", currentDate());
-      formData.append("user_admin", "Farzi");
+      formData.append("user_admin", "Aditya");
 
       var result = await postData(
         "productdetail/productdetail_submit",

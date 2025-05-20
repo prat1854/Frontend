@@ -94,10 +94,10 @@ export default function Dashboard() {
           sx={{ width: 70, height: 70, mb: 1, boxShadow: '0px 4px 8px rgba(0,0,0,0.1)' }} 
         />
         <Typography variant="subtitle1" fontWeight="bold" letterSpacing={1}>
-          Aditya Singh
+          Aditya Purohit
         </Typography>
         <Typography variant="caption" color="text.secondary" fontWeight="medium">
-          adityasingh@gmail.com
+          adityapurohit01@gmail.com
         </Typography>
         {isMobile && (
           <IconButton onClick={handleDrawerToggle} sx={{ position: 'absolute', right: 8, top: 8 }}>

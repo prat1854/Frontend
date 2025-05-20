@@ -45,8 +45,8 @@ export default function Login() {
 
   
     // 1. Show Snackbar with OTP
-      showSnackbar(`Your OTP is ${genOtp}`, "info");
-   //   showSnackbar(`Your OTP is Sent to ${phonenumber}`, "info");
+   //   showSnackbar(`Your OTP is ${genOtp}`, "info");
+      showSnackbar(`Your OTP is Sent to ${phonenumber}`, "info");
    
    
       // 2. Send OTP to backend

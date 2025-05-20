@@ -160,7 +160,7 @@ export default function Product(props) {
       formData.append("productpicture", productpicture.bytes);
       formData.append("created_at", currentDate());
       formData.append("updated_at", currentDate());
-      formData.append("user_admin", "Farzi");
+      formData.append("user_admin", "Aditya");
 
       var result = await postData("product/product_submit", formData);
       if (result.status) {

@@ -65,14 +65,14 @@ export default function MyDrawer(props) {
             </ListItemButton>
           </ListItem>
         ))}
-         <ListItem disablePadding>
+         {/* <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
                 <img src={`${serverURL}/images/Boxes.png`} style={{width:40,height:40}} />
               </ListItemIcon>
               <ListItemText primary="All Categories" />
             </ListItemButton>
-          </ListItem>
+          </ListItem> */}
         
       </List>
       <Divider />

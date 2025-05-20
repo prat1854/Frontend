@@ -12,6 +12,12 @@ import PlusMinusButton from "../homepage/PlusMinusButton";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useSelector,useDispatch } from 'react-redux';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+
+
+const disableAnimation = true;
 
 const Accordion = styled((props) => (
     <MuiAccordion  elevation={0} square {...props} />
@@ -56,11 +62,48 @@ export default function ProductDetailsCategory({productData,refresh,setRefresh})
    var keys=Object.keys(cartData)
    var dispatch=useDispatch()
     const [expanded, setExpanded] = React.useState('');
+    const [sortOption, setSortOption] = React.useState('popularity');
+    const [sortedProductData, setSortedProductData] = React.useState([]);
+
+    React.useEffect(() => {
+        setSortedProductData([...productData]);
+    }, [productData]);
+
+    React.useEffect(() => {
+        handleSorting(sortOption);
+    }, [sortOption, productData]);
+
+    const handleSorting = (option) => {
+        let sortedData = [...productData];
+        
+        if(option === 'highToLow') {
+            sortedData.sort((a, b) => {
+                const priceA = a.offerprice > 0 ? a.offerprice : a.price;
+                const priceB = b.offerprice > 0 ? b.offerprice : b.price;
+                return priceB - priceA;
+            });
+        } 
+        else if(option === 'lowToHigh') {
+            sortedData.sort((a, b) => {
+                const priceA = a.offerprice > 0 ? a.offerprice : a.price;
+                const priceB = b.offerprice > 0 ? b.offerprice : b.price;
+                return priceA - priceB;
+            });
+        }
+        
+        setSortedProductData(sortedData);
+    };
 
     const handleChange = (panel) => (event, newExpanded) => {
          setExpanded(newExpanded ? panel : false);
         };
-        const handleChangeQty=(value,item)=>{
+        
+    const handleSortOptionClick = (option) => {
+        setSortOption(option);
+        setExpanded(false);
+    };
+    
+    const handleChangeQty=(value,item)=>{
           if(value==0)
           {
             dispatch({type:"DELETE_CART",payload:[item.productdetailid]})  
@@ -73,11 +116,8 @@ export default function ProductDetailsCategory({productData,refresh,setRefresh})
            setRefresh(!refresh)
          }
         
-
-
-
  const showImages = () => {
-      return productData.map((item)=>{      
+      return sortedProductData.map((item)=>{      
           
               var op=parseInt(((item.price-item.offerprice)/item.price)*100)
           
@@ -165,28 +205,57 @@ export default function ProductDetailsCategory({productData,refresh,setRefresh})
         }
       
   
-
+        
 
 
     return (<div>
 
             <div style={{display:'flex',flexDirection:'column'}}>
-               <Box  sx={{marginTop:5,marginLeft:96,display: 'flex', flexWrap: 'wrap','& > :not(style)': { m: 1, width:180, height: 15}}}>
-                  <section elevation={3}  style={{position:'relative',display: 'flex',alignItems:'center',padding: 10,borderRadius: 24,border: '1px solid #e0e0e0',overflow: 'hidden'}}>
+               <Box sx={{marginTop:5,marginLeft:96,display: 'flex', flexWrap: 'wrap','& > :not(style)': { m: 1, width:200, height: 15}}}>
+                  <section elevation={3} style={{position:'relative',display: 'flex',alignItems:'center',padding: 10,borderRadius: 24,border: '1px solid #e0e0e0',overflow: 'visible'}}>
                         <div style={{display: 'flex',fontSize: 15}}>
         
-             <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}  >
-            <AccordionSummary aria-controls="panel1d-content" id="panel1d-header"style={{ display: 'flex',alignItems: 'center',flexGrow: 1,width:200}} >
-              <Typography><span style={{fontWeight: 500,fontSize: 14,letterSpacing: -0.07,lineHeight: 1.4285714286 }}>Sort by:</span><span style={{marginLeft: 3,fontWeight: 700,fontSize: 15,letterSpacing: -0.07,lineHeight: 1.4285714286 }}>Popularity</span></Typography>
-             </AccordionSummary>
-               <AccordionDetails> 
-             </AccordionDetails>
-            </Accordion>
+                          <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')} TransitionProps={{ timeout: disableAnimation ? 1 : 300 }} >
+                          <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" style={{ display: 'flex',alignItems: 'center',flexGrow: 1,width:190}} >
+                            <Typography>
+                              <span style={{fontWeight: 500,fontSize: 14,letterSpacing: -0.07,lineHeight: 1.4285714286 }}>Sort by:</span>
+                              <span style={{marginLeft: 3,fontWeight: 700,fontSize: 15,letterSpacing: -0.07,lineHeight: 1.4285714286 }}>
+                                  {sortOption === 'popularity' && 'Popularity'}
+                                  {sortOption === 'highToLow' && 'Price: High to Low'}
+                                  {sortOption === 'lowToHigh' && 'Price: Low to High'}
+                              </span>
+                            </Typography>
+                          </AccordionSummary> 
+                          <AccordionDetails> 
+                            <div style={{
+                              position: 'absolute', 
+                              width: 200, 
+                              backgroundColor: 'white', 
+                              padding: '6px 0', 
+                              border: '1px solid #e0e0e0', 
+                              borderRadius: 5,
+                              zIndex: 999,
+                              marginTop: '-10px'
+                            }}>
+                              <List component="nav" aria-label="sorting options">
+                                <ListItemButton onClick={() => handleSortOptionClick('popularity')}>
+                                    <ListItemText primary="Popularity" />
+                                </ListItemButton>
+                                <ListItemButton onClick={() => handleSortOptionClick('highToLow')}>
+                                    <ListItemText primary="Price: High to Low" />
+                                </ListItemButton>
+                                <ListItemButton onClick={() => handleSortOptionClick('lowToHigh')}>
+                                    <ListItemText primary="Price: Low to High" />
+                                </ListItemButton>
+                              </List>
+                            </div>
+                          </AccordionDetails>
+                        </Accordion>
                        
-             </div>
-           </section>
-          </Box>
-        </div>
+                      </div>
+                  </section>
+                </Box>
+              </div>
 
 
 

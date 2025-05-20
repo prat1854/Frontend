@@ -3,7 +3,7 @@ import Header from '../homepage/Header'
 import * as React from 'react';
 import { useState,useEffect } from 'react';
 import { serverURL, getData, postData  } from "../../../services/FetchNodeAdminServices";
-import { Divider,Grid, useMediaQuery, useTheme } from '@mui/material';
+import { Divider,Grid, useMediaQuery, useTheme, Container } from '@mui/material';
 import ProductImageComponent from '../productdetailspage/ProductImageComponent'
 import ProductDescription from '../productdetailspage/ProductDescription'
 import ProductsScroll from '../homepage/ProductsScroll'
@@ -163,62 +163,80 @@ export default function ProductDetailPage() {
         }
     }, [product]);
 
-    return (<div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
-
-        <div>
+    return (
+        <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
             <Header />
+            
+            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                <Grid container spacing={3}>
+                    <Grid item xs={12} md={6}>
+                        <ProductImageComponent 
+                            refresh={refresh} 
+                            setRefresh={setRefresh} 
+                            product={product} 
+                            setProduct={setProduct}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <ProductDescription 
+                            product={product} 
+                            setProduct={setProduct} 
+                        />
+                    </Grid>
+                </Grid>
+            </Container>
+
+            <div style={{
+                backgroundColor: '#f5f6fa',
+                borderRadius: 20,
+                border: '1px solid #e0e0e0',
+                marginBottom: 20,
+                marginTop: 40,
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                width: '90%',
+                height: 8,
+                boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.05)'
+            }}>
+            </div>
+
+            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                <div style={{width:'100%', marginTop:30}}>
+                    <ProductsScroll 
+                        title={"Popular Category"} 
+                        data={popularProducts} 
+                        refresh={refresh} 
+                        setRefresh={setRefresh} 
+                    />
+                </div>
+
+                <div style={{
+                    backgroundColor: '#f5f6fa',
+                    borderRadius: 20, 
+                    border: '1px solid #e0e0e0',
+                    marginBottom: 20,
+                    marginTop: 40,
+                    width: '100%',
+                    height: 8,
+                    boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.05)'
+                }}>
+                </div>
+
+                <div style={{width:'100%', marginTop:30}}>
+                    <ProductsScroll 
+                        title={"Similar Category"} 
+                        data={similarProducts} 
+                        refresh={refresh} 
+                        setRefresh={setRefresh} 
+                    />
+                </div>
+            </Container>
+
+            {!isMobile && (
+                <div style={{marginTop: 50}}>
+                    <Footer />
+                </div>
+            )}
         </div>
-    
-        <Grid container>
-            <Grid item xs={6}>
-            <ProductImageComponent refresh={refresh} setRefresh={setRefresh} product={product} setProduct={setProduct}/>
-            </Grid>
-            <Grid item xs={6}>
-            <ProductDescription product={product} setProduct={setProduct}  />
-            </Grid>
-         </Grid>   
-
-    <div style={{
-        backgroundColor: '#f5f6fa',
-        borderRadius: 20,
-        border: '1px solid #e0e0e0',
-        marginBottom: 20,
-        marginTop: 40,
-        marginLeft: 'auto',
-        marginRight: 'auto',
-        width: '90%',
-        height: 8,
-        boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.05)'
-    }}>
-    </div>
-
-    <div style={{width:'90%', alignSelf:'center', marginTop:30}}>
-       <ProductsScroll title={"Popular Category"} data={popularProducts} refresh={refresh} setRefresh={setRefresh} />
-   </div>
-
-   <div style={{
-        backgroundColor: '#f5f6fa',
-        borderRadius: 20, 
-        border: '1px solid #e0e0e0',
-        marginBottom: 20,
-        marginTop: 40,
-        marginLeft: 'auto',
-        marginRight: 'auto',
-        width: '90%',
-        height: 8,
-        boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.05)'
-    }}>
-    </div>
-
-   <div style={{width:'90%', alignSelf:'center', marginTop:30}}>
-      <ProductsScroll title={"Similar Category"} data={similarProducts} refresh={refresh} setRefresh={setRefresh} />
-    </div>
-
-        {!isMobile && (
-          <div style={{marginTop: 50}}>
-              <Footer />
-          </div>
-        )}
-
-    </div>)
+    )
 }  

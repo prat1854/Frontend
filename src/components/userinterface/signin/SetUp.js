@@ -67,13 +67,15 @@ const handleClose=()=>{
              <div style={{marginTop:20,fontFamily:'JioType, helvetica, arial, sans-serif',fontWeight:800,fontSize:16,letterSpacing:0.25,lineHeight: 1}}>
                 Gender
              </div>
-             <div style={{display:'flex'}}>
-            
-             <FormControlLabel onChange={(e)=>setGender(e.target.value)} value="Female" control={<Radio />} label="Female"  />
-             <FormControlLabel  onChange={(e)=>setGender(e.target.value)} value="Male"  control={<Radio />} label="Male" />
-             <FormControlLabel  onChange={(e)=>setGender(e.target.value)} value="Other"  control={<Radio />} label="Other" />
-            
-             </div>
+             <RadioGroup
+  row
+  value={gender}
+  onChange={(e) => setGender(e.target.value)}
+>
+  <FormControlLabel value="Female" control={<Radio />} label="Female" />
+  <FormControlLabel value="Male" control={<Radio />} label="Male" />
+  <FormControlLabel value="Other" control={<Radio />} label="Other" />
+</RadioGroup>
              <div style={{marginTop:'2%'}}>
              <TextField  onChange={(e)=>setEmailAddress(e.target.value)} label="E-Mail ID" variant="standard" fullWidth />
              </div>

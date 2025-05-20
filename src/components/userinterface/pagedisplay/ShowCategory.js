@@ -52,18 +52,30 @@ const Accordion = styled((props) => (
 
 
 
-export default function ShowCategory({data,scid}) {
+export default function ShowCategory({data,scid,productData}) {
 
      const theme = useTheme();
      const matches = useMediaQuery(theme.breakpoints.up('md'));
      const [expanded, setExpanded] = React.useState('panel1');
      const [brands,setBrands]=React.useState([]) 
+     const [filteredBrands,setFilteredBrands]=React.useState([])
+
      const fetchAllBrands=async(subcategoryid)=>{
       var result=await postData('userinterface/user_get_all_brand_by_subcategoryid',{subcategoryid:subcategoryid})
       setBrands(result.data)
+      
+      // Filter brands based on products
+      if(productData && productData.length > 0) {
+        const productBrandIds = [...new Set(productData.map(product => product.brandid))]
+        const filtered = result.data.filter(brand => productBrandIds.includes(brand.brandid))
+        setFilteredBrands(filtered)
+      } else {
+        setFilteredBrands(result.data)
+      }
     }
+
     const showAllBrands=()=>{
-    return brands.map((item)=>{
+    return filteredBrands.map((item)=>{
       return <div style={{
         fontWeight:500,
         fontSize: 14,
@@ -75,11 +87,12 @@ export default function ShowCategory({data,scid}) {
     })
 
     }
+
     React.useEffect(()=>{
    
       setExpanded(scid);
       fetchAllBrands(scid)
-    },[scid])
+    },[scid,productData])
 
      const handleChange = (panel) => (event, newExpanded) => {
       fetchAllBrands(panel)
@@ -162,130 +175,70 @@ export default function ShowCategory({data,scid}) {
                        </div>
 
                        <Divider style={{width:'100%',marginTop:10,marginBottom:10}} />
-                        
-                       <div style={{display: 'flex',alignItems: 'center',clear: 'both',paddingLeft:15,fontWeight: 800,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,color:'#141414',webkitFontSmoothing: 'antialiased'}}>
-                       Categories</div>
-
-                       <div style={{paddingLeft:8,display: 'flex', marginTop: 12,marginBottom: 12 }}>
-                        <label style={{ fontWeight: 500,fontSize: 15,letterSpacing: -0.07,lineHeight: 1.4285714286, display: 'flex', alignItems: 'flex-start',color: 'rgba(0, 0, 0, .65)',cursor: 'pointer',position: 'relative'}}> 
-                          <span><input type='checkBox' style={{marginLeft: '0.90em',display: 'inline-block', width: '1.25em',height: '1.25em',marginRight: 9,border: '1 solid rgba(0, 0, 0, .65)',borderRadius: 4}} name='stock' id='instock' value={1} autoComplete='off'/></span>
-                            <span>
-                            Breakfast & Snack Mixes
-                             </span>
-                        </label>
-                       </div>
-                       <div style={{paddingLeft:8,display: 'flex', marginTop: 12,marginBottom: 12 }}>
-                        <label style={{ fontWeight: 500,fontSize: 15,letterSpacing: -0.07,lineHeight: 1.4285714286, display: 'flex', alignItems: 'flex-start',color: 'rgba(0, 0, 0, .65)',cursor: 'pointer',position: 'relative'}}> 
-                          <span><input type='checkBox' style={{marginLeft: '0.90em',display: 'inline-block', width: '1.25em',height: '1.25em',marginRight: 9,border: '1 solid rgba(0, 0, 0, .65)',borderRadius: 4}} name='stock' id='instock' value={1} autoComplete='off'/></span>
-                            <span>
-                            Canned Food
-                             </span>
-                        </label>
-                       </div>
-                       <div style={{paddingLeft:8,display: 'flex', marginTop: 12,marginBottom: 12 }}>
-                        <label style={{ fontWeight: 500,fontSize: 15,letterSpacing: -0.07,lineHeight: 1.4285714286, display: 'flex', alignItems: 'flex-start',color: 'rgba(0, 0, 0, .65)',cursor: 'pointer',position: 'relative'}}> 
-                          <span><input type='checkBox' style={{marginLeft: '0.90em',display: 'inline-block', width: '1.25em',height: '1.25em',marginRight: 9,border: '1 solid rgba(0, 0, 0, .65)',borderRadius: 4}} name='stock' id='instock' value={1} autoComplete='off'/></span>
-                            <span>
-                            Chips & Corn Snacks
-                             </span>
-                        </label>
-                       </div>
-                       <div style={{paddingLeft:8,display: 'flex', marginTop: 12,marginBottom: 12 }}>
-                        <label style={{ fontWeight: 500,fontSize: 15,letterSpacing: -0.07,lineHeight: 1.4285714286, display: 'flex', alignItems: 'flex-start',color: 'rgba(0, 0, 0, .65)',cursor: 'pointer',position: 'relative'}}> 
-                          <span><input type='checkBox' style={{marginLeft: '0.90em',display: 'inline-block', width: '1.25em',height: '1.25em',marginRight: 9,border: '1 solid rgba(0, 0, 0, .65)',borderRadius: 4}} name='stock' id='instock' value={1} autoComplete='off'/></span>
-                            <span>
-                            Choco & Nut Spread
-                             </span>
-                        </label>
-                       </div>
-                       <div style={{paddingLeft:8,display: 'flex', marginTop: 12,marginBottom: 12 }}>
-                        <label style={{ fontWeight: 500,fontSize: 15,letterSpacing: -0.07,lineHeight: 1.4285714286, display: 'flex', alignItems: 'flex-start',color: 'rgba(0, 0, 0, .65)',cursor: 'pointer',position: 'relative'}}> 
-                          <span><input type='checkBox' style={{marginLeft: '0.90em',display: 'inline-block', width: '1.25em',height: '1.25em',marginRight: 9,border: '1 solid rgba(0, 0, 0, .65)',borderRadius: 4}} name='stock' id='instock' value={1} autoComplete='off'/></span>
-                            <span>
-                            Chocolates
-                             </span>
-                        </label>
-                       </div>
-
-                       <Divider style={{width:'100%',marginTop:10,marginBottom:10}} />
                             
                        <div style={{display: 'flex',alignItems: 'center',clear: 'both',paddingLeft:15,fontWeight: 800,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,color:'#141414',webkitFontSmoothing: 'antialiased'}}>
                        Brand</div>
 
-                       <div style={{paddingLeft:8,display: 'flex', marginTop: 12,marginBottom: 12 }}>
-                        <label style={{ fontWeight: 500,fontSize: 15,letterSpacing: -0.07,lineHeight: 1.4285714286, display: 'flex', alignItems: 'flex-start',color: 'rgba(0, 0, 0, .65)',cursor: 'pointer',position: 'relative'}}> 
-                          <span><input type='checkBox' style={{marginLeft: '0.90em',display: 'inline-block', width: '1.25em',height: '1.25em',marginRight: 9,border: '1 solid rgba(0, 0, 0, .65)',borderRadius: 4}} name='stock' id='instock' value={1} autoComplete='off'/></span>
-                            <span>
-                            90's Mill
-                             </span>
-                        </label>
-                       </div>
-                       <div style={{paddingLeft:8,display: 'flex', marginTop: 12,marginBottom: 12 }}>
-                        <label style={{ fontWeight: 500,fontSize: 15,letterSpacing: -0.07,lineHeight: 1.4285714286, display: 'flex', alignItems: 'flex-start',color: 'rgba(0, 0, 0, .65)',cursor: 'pointer',position: 'relative'}}> 
-                          <span><input type='checkBox' style={{marginLeft: '0.90em',display: 'inline-block', width: '1.25em',height: '1.25em',marginRight: 9,border: '1 solid rgba(0, 0, 0, .65)',borderRadius: 4}} name='stock' id='instock' value={1} autoComplete='off'/></span>
-                            <span>
-                            9GRAMS
-                             </span>
-                        </label>
-                       </div>
-                       <div style={{paddingLeft:8,display: 'flex', marginTop: 12,marginBottom: 12 }}>
-                        <label style={{ fontWeight: 500,fontSize: 15,letterSpacing: -0.07,lineHeight: 1.4285714286, display: 'flex', alignItems: 'flex-start',color: 'rgba(0, 0, 0, .65)',cursor: 'pointer',position: 'relative'}}> 
-                          <span><input type='checkBox' style={{marginLeft: '0.90em',display: 'inline-block', width: '1.25em',height: '1.25em',marginRight: 9,border: '1 solid rgba(0, 0, 0, .65)',borderRadius: 4}} name='stock' id='instock' value={1} autoComplete='off'/></span>
-                            <span>
-                            ADD ME
-                             </span>
-                        </label>
-                       </div>
-                       <div style={{paddingLeft:8,display: 'flex', marginTop: 12,marginBottom: 12 }}>
-                        <label style={{ fontWeight: 500,fontSize: 15,letterSpacing: -0.07,lineHeight: 1.4285714286, display: 'flex', alignItems: 'flex-start',color: 'rgba(0, 0, 0, .65)',cursor: 'pointer',position: 'relative'}}> 
-                          <span><input type='checkBox' style={{marginLeft: '0.90em',display: 'inline-block', width: '1.25em',height: '1.25em',marginRight: 9,border: '1 solid rgba(0, 0, 0, .65)',borderRadius: 4}} name='stock' id='instock' value={1} autoComplete='off'/></span>
-                            <span>                         
-                             APLENTY
-                             </span>
-                        </label>
-                       </div>
-                       <div style={{paddingLeft:8,display: 'flex', marginTop: 12,marginBottom: 12 }}>
-                        <label style={{ fontWeight: 500,fontSize: 15,letterSpacing: -0.07,lineHeight: 1.4285714286, display: 'flex', alignItems: 'flex-start',color: 'rgba(0, 0, 0, .65)',cursor: 'pointer',position: 'relative'}}> 
-                          <span><input type='checkBox' style={{marginLeft: '0.90em',display: 'inline-block', width: '1.25em',height: '1.25em',marginRight: 9,border: '1 solid rgba(0, 0, 0, .65)',borderRadius: 4}} name='stock' id='instock' value={1} autoComplete='off'/></span>
-                            <span>
-                            BEVZILLA
-                             </span>
-                        </label>
-                       </div>
-                     
+                       {filteredBrands.map((brand) => (
+                         <div key={brand.brandid} style={{paddingLeft:8,display: 'flex', marginTop: 12,marginBottom: 12 }}>
+                           <label style={{ fontWeight: 500,fontSize: 15,letterSpacing: -0.07,lineHeight: 1.4285714286, display: 'flex', alignItems: 'flex-start',color: 'rgba(0, 0, 0, .65)',cursor: 'pointer',position: 'relative'}}> 
+                             <span><input type='checkBox' style={{marginLeft: '0.90em',display: 'inline-block', width: '1.25em',height: '1.25em',marginRight: 9,border: '1 solid rgba(0, 0, 0, .65)',borderRadius: 4}} name='brand' value={brand.brandid} autoComplete='off'/></span>
+                               <span>
+                               {brand.brandname}
+                               </span>
+                           </label>
+                         </div>
+                       ))}
+
                        <Divider style={{width:'100%',marginTop:10,marginBottom:10}} />
                        
                        <div style={{display: 'flex',alignItems: 'center',marginBottom:15,clear: 'both',paddingLeft:15,fontWeight: 800,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,color:'#141414',webkitFontSmoothing: 'antialiased'}}>
                        Price</div>
 
-                       {/*<div style={{width:'80%',float: 'unset',paddingLeft:20,paddingRight:12,display: 'flex', marginTop: 12,marginBottom: 12,fontWeight: 500,fontSize: 15,letterSpacing: -0.08,lineHeight: 1.4285714286, display: 'flex', alignItems: 'flex-start',color: 'rgba(0, 0, 0, .65)',cursor: 'pointer',boxSizing: 'border-box',webkitFontSmoothing: 'antialiased',mozOsxFontSmoothing: 'grayscale',textRendering: 'optimizeLegibility', scrollBehavior: 'smooth',webkitTextSizeAdjust: '100%',msTextSizeAdjust: '100%',webkitTapHighlightColor: 'rgba(0, 0, 0, 0)',position: 'relative' }}>
-                       
-                        <div style={{height: 4,width: '100%',backgroundColor: '#0078ad'}}>
-                          <div aria-valuemax="1000" aria-valuemin="4" ariaValuenow='4' aria-disabled='false' data-handle-key='0' role='slider' tabIndex={0} aria-label='Minimum Filter Handle' style={{left:0,position:'absolute',marginLeft: 12,top: -7,width: 20,height: 20,zIndex: 1,borderRadius: '50%',cursor: 'grab',backgroundColor: '#0078ad'}} >
-                            <div style={{display: 'flex',justifyContent: 'center',marginTop: 20,textAlign: 'left',fontWeight: 700,fontSize: 12,letterSpacing: -0.06,lineHeight: 1.3333333333}}>4</div>
-                            </div>
-                      
-                          <div aria-valuemax="1000" aria-valuemin="4" ariaValuenow='1000' aria-disabled='false' data-handle-key='1' role='slider' tabIndex={0} aria-label='Maximum Filter Handle' style={{left:'100%',position:'absolute',marginLeft: -12,top: -7,width: 20,height: 20,zIndex: 1,borderRadius: '50%',cursor: 'grab',backgroundColor: '#0078ad'}} >
-                            <div style={{display: 'flex',justifyContent: 'center',marginTop: -17,textAlign: 'left',fontWeight: 700,fontSize: 12,letterSpacing: -0.06,lineHeight: 1.3333333333}}>1000</div>
-                          </div>
-                        </div>
-                       
-                        </div>*/}
-                          
-                        <div style={{width:'80%',paddingLeft:20,paddingRight:12,display: 'flex', marginTop: 5,marginBottom: 12,}}>
-                        <Slider value = {range} onChange = {handleChanges} valueLabelDisplay="auto"/>
-                         </div>
+                       {/* Price Range Slider */}
+                       <div style={{paddingLeft:15, paddingRight:15, marginBottom:20}}>
+                         <Box sx={{ width: '100%' }}>
+                           <Slider
+                             value={range}
+                             onChange={handleChanges}
+                             valueLabelDisplay="auto"
+                             min={0}
+                             max={10000}
+                             step={100}
+                           />
+                           <div style={{display: 'flex', justifyContent: 'space-between', marginTop: 10}}>
+                             <div style={{fontWeight: 500, fontSize: 14}}>₹{range[0]}</div>
+                             <div style={{fontWeight: 500, fontSize: 14}}>₹{range[1]}</div>
+                           </div>
+                         </Box>
+                       </div>
 
-                         <Divider style={{width:'100%',marginTop:10,marginBottom:10}} />
+                       <Divider style={{width:'100%',marginTop:10,marginBottom:10}} />
                        
-                       <div style={{display: 'flex',alignItems: 'center',marginBottom:15,clear: 'both',paddingLeft:15,fontWeight: 800,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,color:'#141414',webkitFontSmoothing: 'antialiased'}}>
-                       Discount</div>
+                       {/* Discount Section */}
+                       <div style={{display: 'flex',alignItems: 'center',clear: 'both',paddingLeft:15,fontWeight: 800,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,color:'#141414',webkitFontSmoothing: 'antialiased', marginBottom:15}}>
+                         Discount</div>
+                       
+                       <div style={{paddingLeft:8,display: 'flex', marginTop: 12,marginBottom: 12, flexDirection: 'column' }}>
+                         <label style={{ fontWeight: 500,fontSize: 15,letterSpacing: -0.07,lineHeight: 1.4285714286, display: 'flex', alignItems: 'flex-start',color: 'rgba(0, 0, 0, .65)',cursor: 'pointer',position: 'relative', marginBottom: 8}}> 
+                           <span><input type='radio' name='discount' style={{marginLeft: '0.90em',display: 'inline-block', width: '1.25em',height: '1.25em',marginRight: 9,border: '1 solid rgba(0, 0, 0, .65)',borderRadius: 4}} value='10' autoComplete='off'/></span>
+                           <span>10% and above</span>
+                         </label>
+                         <label style={{ fontWeight: 500,fontSize: 15,letterSpacing: -0.07,lineHeight: 1.4285714286, display: 'flex', alignItems: 'flex-start',color: 'rgba(0, 0, 0, .65)',cursor: 'pointer',position: 'relative', marginBottom: 8}}> 
+                           <span><input type='radio' name='discount' style={{marginLeft: '0.90em',display: 'inline-block', width: '1.25em',height: '1.25em',marginRight: 9,border: '1 solid rgba(0, 0, 0, .65)',borderRadius: 4}} value='20' autoComplete='off'/></span>
+                           <span>20% and above</span>
+                         </label>
+                         <label style={{ fontWeight: 500,fontSize: 15,letterSpacing: -0.07,lineHeight: 1.4285714286, display: 'flex', alignItems: 'flex-start',color: 'rgba(0, 0, 0, .65)',cursor: 'pointer',position: 'relative', marginBottom: 8}}> 
+                           <span><input type='radio' name='discount' style={{marginLeft: '0.90em',display: 'inline-block', width: '1.25em',height: '1.25em',marginRight: 9,border: '1 solid rgba(0, 0, 0, .65)',borderRadius: 4}} value='30' autoComplete='off'/></span>
+                           <span>30% and above</span>
+                         </label>
+                         <label style={{ fontWeight: 500,fontSize: 15,letterSpacing: -0.07,lineHeight: 1.4285714286, display: 'flex', alignItems: 'flex-start',color: 'rgba(0, 0, 0, .65)',cursor: 'pointer',position: 'relative'}}> 
+                           <span><input type='radio' name='discount' style={{marginLeft: '0.90em',display: 'inline-block', width: '1.25em',height: '1.25em',marginRight: 9,border: '1 solid rgba(0, 0, 0, .65)',borderRadius: 4}} value='50' autoComplete='off'/></span>
+                           <span>50% and above</span>
+                         </label>
+                       </div>
 
-                       <div style={{width:'80%',paddingLeft:20,paddingRight:12,display: 'flex', marginTop: 0,marginBottom: 12,}}>
-                        <Slider value = {range1} onChange = {handleChange1} valueLabelDisplay="auto" />
-                         </div>
-
-                   
+                       <Divider style={{width:'100%',marginTop:10,marginBottom:10}} />
                  </section>
                </Box>
               </div>

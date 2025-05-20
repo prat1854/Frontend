@@ -155,7 +155,7 @@ export default function UserDashboard() {
     setCurrentTab(0);
     
     // Redirect to homepage directly without forcing a page reload
-    navigate('/homepage');
+    navigate('/');
   };
 
   // Edit Profile handlers
