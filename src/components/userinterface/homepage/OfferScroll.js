@@ -63,7 +63,7 @@ useEffect(() => {
 
   const fetchOffers = async () => {
     try {
-      const result = await postData('userinterface/fetch_offer_scroll_images');
+      const result = await postData('userinterface/all_adoffers');
       if(result.status) {
         setOfferData(result.data);
       }
