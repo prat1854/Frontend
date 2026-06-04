@@ -11,7 +11,7 @@ import { useTheme } from '@mui/material/styles';
 import { setRef } from "@mui/material";
 import { auto } from "@popperjs/core";
 
-export default function OfferScroll({state,addata}){
+export default function OfferScroll({state, data: propData, addata}){
     var scrollRef=useRef()
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.up('md'));
@@ -32,10 +32,22 @@ export default function OfferScroll({state,addata}){
       };   
      
     
-      const data = ['a1.webp', 'a2.webp', 'a3.webp', 'a4.webp', 'a5.webp'];
+      const finalData = Array.isArray(propData) && propData.length > 0
+        ? propData
+        : (Array.isArray(addata) && addata.length > 0
+            ? addata
+            : (Array.isArray(offerData) && offerData.length > 0 ? offerData : []));
+
+      const scrollImages = finalData.length > 0
+        ? finalData.map(item => {
+            if (!item) return '';
+            if (typeof item === 'string') return item;
+            return item.filenames || item.picture || '';
+          }).filter(Boolean)
+        : ['a1.webp', 'a2.webp', 'a3.webp', 'a4.webp', 'a5.webp'];
 
       const showImages = () => {
-      return data.map((item, index) => {
+      return (scrollImages || []).map((item, index) => {
           return (
               <div key={index}>
                       <img 
@@ -50,11 +62,11 @@ export default function OfferScroll({state,addata}){
       };
       
 const handleNext=()=>{
-scrollRef.current.slickNext()
+  if (scrollRef.current) scrollRef.current.slickNext()
 }
 
 const handlePrev=()=>{
-    scrollRef.current.slickPrev()
+  if (scrollRef.current) scrollRef.current.slickPrev()
 }
 
 useEffect(() => {
@@ -64,8 +76,10 @@ useEffect(() => {
   const fetchOffers = async () => {
     try {
       const result = await postData('userinterface/all_adoffers');
-      if(result.status) {
+      if(result && result.status && Array.isArray(result.data)) {
         setOfferData(result.data);
+      } else {
+        setOfferData([]);
       }
     } catch (error) {
       setError(true);

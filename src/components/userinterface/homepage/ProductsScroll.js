@@ -48,15 +48,19 @@ export default function ProductsScroll({title,data,refresh,setRefresh}) {
 
  }
   const showImages = () => {
-    return data.map((item) => {
-        var op=parseInt(((item.price-item.offerprice)/item.price)*100)
+    return (Array.isArray(data) ? data : []).map((item) => {
+      if (!item) return null;
+      var price = item.price || 0;
+      var offerprice = item.offerprice || 0;
+      var op = price > 0 ? parseInt(((price - offerprice) / price) * 100) : 0;
       return (
-        <div style={{ display: "flex", flexDirection: "column"}}>
+        <div key={item.productdetailid} style={{ display: "flex", flexDirection: "column"}}>
         
         <div  onClick={()=>handleNavigateProductDetail(item)} style={{ alignSelf:'center',height:matches?180:80 }}>
           <img
-            src={`${serverURL}/images/${item.picture}`}
+            src={`${serverURL}/images/${item.picture || ''}`}
             style={{ width:md_matches?'80%':matches?'60%':'50%', borderRadius: 10 }}
+            alt={item.productdetailname || 'Product'}
           />
           </div>
 
@@ -81,7 +85,7 @@ export default function ProductsScroll({title,data,refresh,setRefresh}) {
             {item.productdetailname}
           </div>
 
-          {item.productdetailname.length<=20?<div style={{  fontWeight:500,
+          {item.productdetailname && item.productdetailname.length<=20?<div style={{  fontWeight:500,
                 fontSize: 14,
                 letterSpacing: -0.07,
                 lineHeight: 1.428571428,}}>&nbsp;</div>:<></>}
@@ -93,14 +97,14 @@ export default function ProductsScroll({title,data,refresh,setRefresh}) {
           }}>
             {item.weight} {item.weighttype}
           </div>
-          {item.offerprice>0?<div style={{marginTop:7,display:'flex',flexDirection:'column'}}>
+          {offerprice>0?<div style={{marginTop:7,display:'flex',flexDirection:'column'}}>
           <div   style={{
                 fontWeight:500,
                 fontSize: 14,
                 letterSpacing: -0.07,
                 lineHeight: 1.428571428,
           }}>
-             <span>&#8377;</span>{item.offerprice}
+             <span>&#8377;</span>{offerprice}
           </div>
           <div   style={{
                 fontWeight:500,
@@ -109,18 +113,18 @@ export default function ProductsScroll({title,data,refresh,setRefresh}) {
                 lineHeight: 1.428571428,
                 color:'grey'
           }}>
-            <div style={{display:'flex',alignItems:'center',fontSize:12}}> <s><span>&#8377;{item.price}</span></s><span style={{margin:5,width:60,display:'flex',justifyContent:'center',alignItems:'center',borderRadius:2,background:'#e5f7ee',color:'#03753c'}}>{op}% OFF</span></div>
+            <div style={{display:'flex',alignItems:'center',fontSize:12}}> <s><span>&#8377;{price}</span></s><span style={{margin:5,width:60,display:'flex',justifyContent:'center',alignItems:'center',borderRadius:2,background:'#e5f7ee',color:'#03753c'}}>{op}% OFF</span></div>
           </div>
           
           </div>:<div> <div   style={{
             marginTop:7,
-                fontWeight:500,
-                fontSize: 14,
-                letterSpacing: -0.07,
-                lineHeight: 1.428571428,
+            fontWeight:500,
+            fontSize: 14,
+            letterSpacing: -0.07,
+            lineHeight: 1.428571428,
              
           }}>
-             <span>&#8377;</span>{item.price}
+             <span>&#8377;</span>{price}
              
           </div>
           <div style={{   lineHeight: 1.428571428,}}>&nbsp;</div>      
@@ -135,12 +139,23 @@ export default function ProductsScroll({title,data,refresh,setRefresh}) {
     });
   };
   const handleNext = () => {
-    scrollRef.current.slickNext();
+    if (scrollRef.current) scrollRef.current.slickNext();
   };
 
   const handlePrev = () => {
-    scrollRef.current.slickPrev();
+    if (scrollRef.current) scrollRef.current.slickPrev();
   };
+
+  if (!Array.isArray(data) || data.length === 0) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', marginTop: 20 }}>
+        <div style={{fontWeight: 900, textTransform: 'capitalize', fontSize:24, letterSpacing:-0.72, lineHeight: 1, color: '#141414', marginBottom:5}}>{title}</div>
+        <div style={{ padding: '30px', textAlign: 'center', background: '#f9f9f9', borderRadius: 12, border: '1px dashed #e0e0e0', color: '#888' }}>
+          No products available.
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>

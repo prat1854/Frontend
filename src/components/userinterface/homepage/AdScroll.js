@@ -9,7 +9,7 @@ import { useRef } from "react";
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { setRef } from "@mui/material";
-export default function AdScroll({addata}){
+export default function AdScroll({data: propData, addata}){
     var scrollRef=useRef()
     const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('md'));
@@ -25,10 +25,21 @@ export default function AdScroll({addata}){
         pauseOnHover:true,
         pauseOnFocus:true,
       };   
-      const data = ['c1.webp', 'c2.webp', 'c3.webp', 'c4.webp', 'c5.webp'];
+      
+      const finalData = Array.isArray(propData) && propData.length > 0
+        ? propData
+        : (Array.isArray(addata) && addata.length > 0 ? addata : []);
+
+      const scrollImages = finalData.length > 0
+        ? finalData.map(item => {
+            if (!item) return '';
+            if (typeof item === 'string') return item;
+            return item.filenames || item.picture || '';
+          }).filter(Boolean)
+        : ['c1.webp', 'c2.webp', 'c3.webp', 'c4.webp', 'c5.webp'];
 
       const showImages = () => {
-          return data.map((item, index) => {
+          return (scrollImages || []).map((item, index) => {
               return (
                   <div key={index}>
                      <img 
@@ -48,11 +59,11 @@ export default function AdScroll({addata}){
       };
 
 const handleNext=()=>{
-scrollRef.current.slickNext()
+  if (scrollRef.current) scrollRef.current.slickNext()
 }
 
 const handlePrev=()=>{
-    scrollRef.current.slickPrev()
+  if (scrollRef.current) scrollRef.current.slickPrev()
 }
 
 return(<div  style={{position:'relative'}}>

@@ -21,36 +21,73 @@ export default function HomePage()
     const[adOffer,setAdOffer]=useState([])
     const[popularProducts,setPopularProducts]=useState([])
     const [refresh,setRefresh]=useState(false)
+    const [loading,setLoading]=useState(true)
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.up("md"));
     const user = useSelector(state => state.user);
-    const userData = Object.values(user);
+    const userData = Object.values(user || {});
     const navigate = useNavigate();
     
   const fetchAllProductDetails = async (productstatus) => {
     var result = await postData('userinterface/display_all_productdetail_by_status', { productstatus });
-    setPopularProducts(result.data);
-};
+    if (result && result.status && Array.isArray(result.data)) {
+      setPopularProducts(result.data);
+    } else {
+      setPopularProducts([]);
+    }
+  };
 
     const fetchAllOffers=async()=>{
         var result=await getData('userinterface/all_adoffers')
-        setAdOffer(result.data) 
+        if (result && result.status && Array.isArray(result.data)) {
+          setAdOffer(result.data);
+        } else {
+          setAdOffer([]);
+        }
    }
     const fetchAllBanners=async()=>{
          var result=await getData('userinterface/show_all_banner')
-         setBanners(result.data) 
+         if (result && result.status && Array.isArray(result.data)) {
+           setBanners(result.data);
+         } else {
+           setBanners([]);
+         }
     }
     const fetchAllBankOffer=async()=>{
         var result=await getData('userinterface/show_all_bankoffer')
-        setBankOffer(result.data) 
+        if (result && result.status && Array.isArray(result.data)) {
+          setBankOffer(result.data);
+        } else {
+          setBankOffer([]);
+        }
    }
     useEffect(function(){
-      fetchAllBanners()
-      fetchAllBankOffer()
-      fetchAllOffers()
-      fetchAllProductDetails('Trending')
-
+      const loadData = async () => {
+        try {
+          await Promise.all([
+            fetchAllBanners(),
+            fetchAllBankOffer(),
+            fetchAllOffers(),
+            fetchAllProductDetails('Trending')
+          ]);
+        } catch (e) {
+          console.error(e);
+        } finally {
+          setLoading(false);
+        }
+      };
+      loadData();
     },[])
+
+    if (loading) {
+      return (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', flexDirection: 'column' }}>
+          <div style={{ fontSize: '18px', fontWeight: '500', color: '#0c5273' }}>
+            Loading QuickComm...
+          </div>
+        </div>
+      );
+    }
 
     return(
         <div style={{display:'flex',justifyContent:'center',flexDirection:'column'}}>

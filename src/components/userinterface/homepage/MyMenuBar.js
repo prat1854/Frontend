@@ -24,36 +24,40 @@ const handleClose = () => {
 
 const fetchAllProductDetailsBySubCategory=async(subcategoryid)=>{
   var result=await postData('userinterface/user_display_product_details_by_subcategory',{subcategoryid})
-   navigate('/pagecategorydisplay',{state:{productData:result.data}})
+  navigate('/pagecategorydisplay',{state:{productData: (result && result.status && Array.isArray(result.data)) ? result.data : []}})
 }
 
 const fetchAllSubCategory=async(categoryid)=>{
   var result=await postData('userinterface/user_get_all_subcategory_by_categoryid',{categoryid})
-  setSubCategory(result.data)
+  if (result && result.status && Array.isArray(result.data)) {
+    setSubCategory(result.data)
+  } else {
+    setSubCategory([])
+  }
 }
 
 const fetchAllCategory=async()=>{
   var result=await postData('userinterface/user_display_all_category',{status:'limit'})
-  setCategory(result.data)
+  if (result && result.status && Array.isArray(result.data)) {
+    setCategory(result.data)
+  } else {
+    setCategory([])
+  }
 }
 useEffect(()=>{
     fetchAllCategory()
 },[])
 
 const showCategoryMenu=()=>{
-  return category.map((item)=>{
-        return(<Button value={item.categoryid} onClick={handleClick} style={{color:'#fff',fontWeight:'bold',marginLeft:10}}>{item.categoryname}</Button>)
-
-
+  return (category || []).map((item)=>{
+        return(<Button key={item.categoryid} value={item.categoryid} onClick={handleClick} style={{color:'#fff',fontWeight:'bold',marginLeft:10}}>{item.categoryname}</Button>)
     })
 }
 
 
 const showSubCategoryMenu=()=>{
-  return subCategory.map((item)=>{
-        return(<MenuItem onClick={()=>fetchAllProductDetailsBySubCategory(item.subcategoryid)} >{item.subcategoryname}</MenuItem>)
-
-
+  return (subCategory || []).map((item)=>{
+        return(<MenuItem key={item.subcategoryid} onClick={()=>fetchAllProductDetailsBySubCategory(item.subcategoryid)} >{item.subcategoryname}</MenuItem>)
     })
 }
 

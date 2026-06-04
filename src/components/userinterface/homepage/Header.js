@@ -18,8 +18,8 @@ import MyDrawer from './MyDrawer';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 export default function Header() {
-  var cartData=useSelector(state=>state.cart)
-  var user=useSelector(state=>state.user)
+  var cartData=useSelector(state=>state?.cart) || {}
+  var user=useSelector(state=>state?.user) || {}
  
   var userData=Object.values(user)
   var keys=Object.keys(cartData)

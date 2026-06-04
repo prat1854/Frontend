@@ -18,7 +18,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function MyDrawer(props) {
     const [category,setCategory]=useState([])
-    const user = useSelector(state => state.user);
+    const user = useSelector(state => state?.user) || {};
     const userData = Object.values(user);
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -28,7 +28,11 @@ export default function MyDrawer(props) {
     },[])
     const fetchAllCategory=async()=>{
         var result=await postData('userinterface/user_display_all_category',{status:'limit'})
-        setCategory(result.data)
+        if (result && result.status && Array.isArray(result.data)) {
+          setCategory(result.data)
+        } else {
+          setCategory([])
+        }
     }
     
     const handleLogout = () => {
@@ -37,10 +41,10 @@ export default function MyDrawer(props) {
       props.setOpen(false);
     };
       
-
+ 
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={()=>props.setOpen(false)}>
-      {userData?.length > 0 && (
+      {userData?.length > 0 && userData[0] && (
         <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <AccountCircleIcon sx={{ fontSize: 60, color: '#0078ad', mb: 1 }} />
           <Box sx={{ fontWeight: 'bold', fontSize: 16, mb: 0.5 }}>
@@ -55,7 +59,7 @@ export default function MyDrawer(props) {
       <Divider />
       
       <List>
-        {category.map((item, index) => (
+        {(category || []).map((item, index) => (
           <ListItem key={item.categoryid} disablePadding>
             <ListItemButton>
               <ListItemIcon>

@@ -30,7 +30,11 @@ const handleShareOnWhatsApp = () => {
 
 const fetchAllProductsById=async()=>{
 var response=await postData('userinterface/user_display_product_details_by_id',{productid:product?.productid})
-setProductList(response.data)
+if (response && response.status && Array.isArray(response.data)) {
+  setProductList(response.data)
+} else {
+  setProductList([])
+}
 
 }
     useEffect(()=>{
@@ -143,7 +147,7 @@ setProduct(item)
   }
 
 const packSize = () => {
-  return productList.map((item)=>{
+  return (productList || []).map((item)=>{
  
     var op = parseInt(((item.price - item.offerprice) / item.price) * 100)
 

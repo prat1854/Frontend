@@ -17,8 +17,8 @@ export default function PaymentDetails(){
     const matches = useMediaQuery(theme.breakpoints.up('md'));
     const [open,setOpen]=useState(false)
     var dispatch=useDispatch()
-    var cartData=useSelector((state)=>state.cart)
-    var user=useSelector((state)=>state.user)
+    var cartData=useSelector((state)=>state?.cart) || {}
+    var user=useSelector((state)=>state?.user) || {}
     var userData=Object.values(user)
     var data =Object.values(cartData) 
     var keys =Object.keys(cartData) 
@@ -88,13 +88,13 @@ const handlePayment = () => {
 const saveOrderToDatabase = async (paymentId) => {
   try {
     // Prepare order data
-    const orderItems = data.map(item => ({
-      productid: item.productid,
-      productdetailid: item.productdetailid,
-      name: item.productname,
-      price: item.offerprice > 0 ? item.offerprice : item.price,
-      qty: item.qty,
-      image: item.picture
+    const orderItems = (data || []).map(item => ({
+      productid: item?.productid,
+      productdetailid: item?.productdetailid,
+      name: item?.productname,
+      price: item && item.offerprice > 0 ? item.offerprice : item?.price,
+      qty: item?.qty,
+      image: item?.picture
     }));
     
     // Prepare order details
@@ -233,13 +233,14 @@ document.body.appendChild(script);
 
 
     const ShowAddress=()=>{
-      return userAddress.map((item)=>{
-        return <div>
-        <div>{userData[0].firstname} {userData[0].lastname} </div>
-        <div>{userData[0].address}</div>
-        <div>{userData[0].building},{userData[0].towerno},{userData[0].floorno}</div>
-        <div>House No:{userData[0].houseno}</div>
-        <div>{userData[0].state},{userData[0].city},{userData[0].pincode}</div>
+      return (userAddress || []).map((item, index)=>{
+        const u = userData[0] || {};
+        return <div key={index}>
+        <div>{u?.firstname} {u?.lastname} </div>
+        <div>{u?.address}</div>
+        <div>{u?.building},{u?.towerno},{u?.floorno}</div>
+        <div>House No:{u?.houseno}</div>
+        <div>{u?.state},{u?.city},{u?.pincode}</div>
       </div>
     })
     } 

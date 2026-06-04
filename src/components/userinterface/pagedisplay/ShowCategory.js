@@ -62,27 +62,28 @@ export default function ShowCategory({data,scid,productData}) {
 
      const fetchAllBrands=async(subcategoryid)=>{
       var result=await postData('userinterface/user_get_all_brand_by_subcategoryid',{subcategoryid:subcategoryid})
-      setBrands(result.data)
+      const brandList = result && result.status && Array.isArray(result.data) ? result.data : []
+      setBrands(brandList)
       
       // Filter brands based on products
       if(productData && productData.length > 0) {
-        const productBrandIds = [...new Set(productData.map(product => product.brandid))]
-        const filtered = result.data.filter(brand => productBrandIds.includes(brand.brandid))
+        const productBrandIds = [...new Set((productData || []).map(product => product?.brandid))]
+        const filtered = brandList.filter(brand => brand && productBrandIds.includes(brand.brandid))
         setFilteredBrands(filtered)
       } else {
-        setFilteredBrands(result.data)
+        setFilteredBrands(brandList)
       }
     }
 
     const showAllBrands=()=>{
-    return filteredBrands.map((item)=>{
-      return <div style={{
+    return (filteredBrands || []).map((item)=>{
+      return <div key={item?.brandid} style={{
         fontWeight:500,
         fontSize: 14,
         letterSpacing: -0.07,
         lineHeight: 1.4285714286,
         marginBottom:5}}>
-          {item.brandname}
+          {item?.brandname}
       </div>
     })
 
@@ -114,8 +115,8 @@ export default function ShowCategory({data,scid,productData}) {
 
 
     const showAllSubCategory=()=>{
-      return data.map((item)=>{
-        return<div><Accordion expanded={expanded ===item.subcategoryid} onChange={handleChange(item.subcategoryid)} style={{marginBottom:10}}  >
+      return (data || []).map((item)=>{
+        return<div key={item.subcategoryid}><Accordion expanded={expanded ===item.subcategoryid} onChange={handleChange(item.subcategoryid)} style={{marginBottom:10}}  >
         <AccordionSummary aria-controls="panel1d-content" id="panel1d-header"style={{ display: 'flex',alignItems: 'center',flexGrow: 1,marginBottom:-15}} >
           <Typography style={{
            fontWeight: 700,
@@ -179,12 +180,12 @@ export default function ShowCategory({data,scid,productData}) {
                        <div style={{display: 'flex',alignItems: 'center',clear: 'both',paddingLeft:15,fontWeight: 800,fontSize: 16,letterSpacing: -0.08,lineHeight: 1.5,color:'#141414',webkitFontSmoothing: 'antialiased'}}>
                        Brand</div>
 
-                       {filteredBrands.map((brand) => (
-                         <div key={brand.brandid} style={{paddingLeft:8,display: 'flex', marginTop: 12,marginBottom: 12 }}>
+                       {(filteredBrands || []).map((brand) => (
+                         <div key={brand?.brandid} style={{paddingLeft:8,display: 'flex', marginTop: 12,marginBottom: 12 }}>
                            <label style={{ fontWeight: 500,fontSize: 15,letterSpacing: -0.07,lineHeight: 1.4285714286, display: 'flex', alignItems: 'flex-start',color: 'rgba(0, 0, 0, .65)',cursor: 'pointer',position: 'relative'}}> 
-                             <span><input type='checkBox' style={{marginLeft: '0.90em',display: 'inline-block', width: '1.25em',height: '1.25em',marginRight: 9,border: '1 solid rgba(0, 0, 0, .65)',borderRadius: 4}} name='brand' value={brand.brandid} autoComplete='off'/></span>
+                             <span><input type='checkBox' style={{marginLeft: '0.90em',display: 'inline-block', width: '1.25em',height: '1.25em',marginRight: 9,border: '1 solid rgba(0, 0, 0, .65)',borderRadius: 4}} name='brand' value={brand?.brandid} autoComplete='off'/></span>
                                <span>
-                               {brand.brandname}
+                               {brand?.brandname}
                                </span>
                            </label>
                          </div>

@@ -19,10 +19,10 @@ export default function MyCart({refresh,setRefresh})
 
     const [open, setOpen] = useState(false);
     var dispatch=useDispatch()
-    var cartData=useSelector((state)=>state.cart)
+    var cartData=useSelector((state)=>state?.cart) || {}
     var data =Object.values(cartData) 
     var keys =Object.keys(cartData) 
-    var user=useSelector((state)=>state.user)
+    var user=useSelector((state)=>state?.user) || {}
     var userData=Object.values(user)
     const navigate = useNavigate();
 
@@ -167,8 +167,8 @@ export default function MyCart({refresh,setRefresh})
      }
         
       const CartDetails=()=>{
-        return data.map((item,index)=>{
-            var op=(item.price-item.offerprice)*item.qty
+        return (data || []).map((item,index)=>{
+            var op=((item?.price || 0) - (item?.offerprice || 0)) * (item?.qty || 0)
          return(
         <div >
             

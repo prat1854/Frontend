@@ -57,7 +57,7 @@ const Accordion = styled((props) => (
 
 
 export default function ProductDetailsCategory({productData,refresh,setRefresh})
-{  var cartData=useSelector((state)=>state?.cart)
+{  var cartData=useSelector((state)=>state?.cart) || {}
 
    var keys=Object.keys(cartData)
    var dispatch=useDispatch()
@@ -66,7 +66,7 @@ export default function ProductDetailsCategory({productData,refresh,setRefresh})
     const [sortedProductData, setSortedProductData] = React.useState([]);
 
     React.useEffect(() => {
-        setSortedProductData([...productData]);
+        setSortedProductData(Array.isArray(productData) ? [...productData] : []);
     }, [productData]);
 
     React.useEffect(() => {
@@ -74,7 +74,7 @@ export default function ProductDetailsCategory({productData,refresh,setRefresh})
     }, [sortOption, productData]);
 
     const handleSorting = (option) => {
-        let sortedData = [...productData];
+        let sortedData = Array.isArray(productData) ? [...productData] : [];
         
         if(option === 'highToLow') {
             sortedData.sort((a, b) => {
@@ -116,8 +116,8 @@ export default function ProductDetailsCategory({productData,refresh,setRefresh})
            setRefresh(!refresh)
          }
         
- const showImages = () => {
-      return sortedProductData.map((item)=>{      
+  const showImages = () => {
+      return (sortedProductData || []).map((item)=>{      
           
               var op=parseInt(((item.price-item.offerprice)/item.price)*100)
           

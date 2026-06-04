@@ -96,9 +96,9 @@ export default function UserDashboard() {
   const navigate = useNavigate();
   
   // User data from Redux
-  const user = useSelector(state => state.user);
+  const user = useSelector(state => state?.user) || {};
   const userData = Object.values(user);
-  const reduxOrders = useSelector(state => state.orders);
+  const reduxOrders = useSelector(state => state?.orders) || [];
   
   // Initialize all state variables at the top level
   const [orderHistory, setOrderHistory] = useState([]);
@@ -125,7 +125,8 @@ export default function UserDashboard() {
       navigate('/login', { replace: true });
     } else {
       // Get orders from Redux store for this user
-      const userOrders = reduxOrders.filter(order => order.userid === userData[0]?.userid);
+      const ordersList = Array.isArray(reduxOrders) ? reduxOrders : [];
+      const userOrders = ordersList.filter(order => order && order.userid === userData[0]?.userid);
       setOrderHistory(userOrders);
       setLoading(false);
 
@@ -216,7 +217,7 @@ export default function UserDashboard() {
   };
   
   // Calculate total spent
-  const totalSpent = orderHistory.reduce((total, order) => total + order.amount, 0);
+  const totalSpent = (orderHistory || []).reduce((total, order) => total + (order?.amount || 0), 0);
   
   // Rendering logic - separate authentication check from rendering
   const renderDashboard = () => {
@@ -319,7 +320,7 @@ export default function UserDashboard() {
                         <LocalShippingIcon sx={{ fontSize: 40, color: theme.palette.warning.main, mb: 1 }} />
                         <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
                           {loading ? <CircularProgress size={24} /> : 
-                            orderHistory.filter(order => order.status === 'Processing' || order.status === 'Shipped').length}
+                            (orderHistory || []).filter(order => order && (order.status === 'Processing' || order.status === 'Shipped')).length}
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
                           Active Orders

@@ -171,15 +171,12 @@ export default function ProductPicture(props) {
   };
 
   const showThumbnails=()=>{
-    return filenames?.bytes?.map((item)=>{
+    return (Array.isArray(filenames?.bytes) ? filenames.bytes : []).map((item)=>{
      return(<div style={{margin:2,width:30, height:30,borderRadius:5}}><img src={URL.createObjectURL(item)}  style={{width:30,height:30}} /></div>)
-
     })
-
-
   }
   const handleImage=(event)=>{
-     setFilenames({bytes:event.target.files[0],file:URL.createObjectURL(event.target.files[0])})
+     setFilenames({bytes:Object.values(event.target.files),file:URL.createObjectURL(event.target.files[0])})
   }
 
   const resetValue = () => {
